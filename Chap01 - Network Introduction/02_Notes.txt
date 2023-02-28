@@ -1,0 +1,21 @@
+= Protocols define a language and a set of rules and procedures that enable devices and systems to communicate
+= Networking protocols concern themselves with ensuring that all the
+  devices on a network or internetwork are in agreement about how various actions
+  must be performed in the total communication process
+= In the context of the OSI Reference Model, a protocol is formally defined as a set of rules governing communication 
+  between entities at the same layer
+  = For example, each host on a TCP/IP network has a TCP implementation, and those hosts all communicate with each other logically
+    at layer 4 of the OSI model.
+= One fundamental way to differentiate between networking technologies is on the basis of the method used to determine the path 
+  between devices over which information will flow
+  = In the circuit-switching networking method, a connection called a circuit, which is used for the whole communication, is set up 
+    between two devices
+    = Even if many potential paths through intermediate devices may exist between the two devices that are communicating, only one 
+      will be used for any given dialogue (02_Notes_1.jpg)
+    = The classic example of a circuit-switched network is the telephone system.
+      = When you call someone and she answers, you establish a circuit connection and can pass data in a steady stream
+      = That circuit functions the same way, regardless of how many intermediate devices are used to carry your voice
+  = In the packet-switching network type, no specific path is used for data transfer Instead, the data is chopped up into small pieces called 
+    packets and sent over the network.
+  = You can route, combine, or fragment the packets as required to get them to their eventual destination
+  = On the receiving end, the process is reversed—the data is read from the packets and reassembled to form the original data (02_Notes_2.JPG)

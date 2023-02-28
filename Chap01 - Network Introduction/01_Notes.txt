@@ -1,0 +1,43 @@
+= A network is simply a collection of computers or other hardware devices that are connected
+  together, either physically or logically, using special hardware and software
+  that allows the devices to exchange information and cooperate
+= Networking is the term that describes the processes involved in designing, implementing, upgrading,
+  managing, and otherwise working with networks and network technologies
+= Most of the benefits of networking can be divided into two basic categories:
+  connectivity and sharing
+= At a high level, networks are advantageous because they allow computers
+  and people to be connected together so that they can share resources. Some of the specific
+  benefits of networking include communication, data sharing, Internet access, data security and
+  management, application performance enhancement, and entertainment
+= Networking has a few drawbacks that you can weigh against its many
+  positive aspects. Setting up a network has costs in hardware, software, maintenance, and
+  administration. It is also necessary to manage a network to keep it running smoothly and to
+  address possible misuse or abuse issues. Data security also becomes a much bigger concern
+  when computers are connected together
+= Networking technologies are most often compartmentalized in this manner by
+  dividing their functions into layers, each of which contains hardware and software
+  lements
+  = Each layer is responsible for performing a particular type of task and
+    interacts with the layers above and below it
+  = Layers are conceptually arranged into a vertical stack
+  = Lower layers are charged with more concrete tasks such as hardware
+    signaling and low-level communication; they provide services to the higher layers
+  = The higher layers, in turn, use these services to implement more abstract functions
+    such as implementing user applications
+= One other important benefit of layering is that makes it possible for technologies
+  defined by different groups to interoperate
+  = For this to be possible, it is necessary for everyone to agree on how layers will be 
+    defined and used. The most common tool for this purpose is a networking model
+  = The model describes what the different layers are in the network, what each is responsible 
+    for doing, and how they interact
+  = The most common general model in use today is the Open Systems Interconnection (OSI) Reference Model, 
+    which consists of seven stacked layers
+  = These range from the physical layer (layer 1) at the bottom, which is responsible for lowlevel
+    signaling
+    = to the application layer (layer 7) at the top, where application software is implemented. 
+= An architecture is essentially a set of rules that describes the function of some portion
+  of the hardware and software that constitutes a stack of layers
+  = Such a ruleset usually takes the form of a specification or standard that describes how equipment and
+    programs using the technology must behave
+  = A networking architecture is designed to implement the functions associated with a particular contiguous 
+    set of layers of the OSI Reference Model, either formally or informally
