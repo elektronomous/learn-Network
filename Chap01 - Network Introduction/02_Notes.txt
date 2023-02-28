@@ -19,3 +19,24 @@
     packets and sent over the network.
   = You can route, combine, or fragment the packets as required to get them to their eventual destination
   = On the receiving end, the process is reversed—the data is read from the packets and reassembled to form the original data (02_Notes_2.JPG)
+= One important issue in selecting a switching method is whether the network medium is shared or dedicated
+  = Your phone line can be used for establishing a circuit because you are the only one who can use it (dedicated)
+  = this doesn’t work well with LANs, which typically use a single shared medium and baseband signaling
+    = If two devices were to establish a connection, they would lock out all the other devices for a
+      long period of time
+      = It makes more sense to chop the data into small pieces and send them one at a time. Then, if two other devices want to communicate, 
+        their packets can be interspersed, and everyone can share the network
+    = there are some disadvantages of packet switching compared to circuit switching, all data does not take the same predictable path between 
+      devices, it is possible that some pieces of data may get lost in transit or show up in the incorrect order
+= in modern networks, packet and circuit are often combined 
+  = For example, suppose you connect to the Internet using a dial-up modem. You will be using IP datagrams (packets) to carry higher-layer data, 
+    but it will be over the circuit-switched telephone network. Yet the data may be sent over the telephone system in digital packetized form.
+= Another issue is the relationship between circuit and packet switching, and whether a technology is connection-oriented or connectionless
+= Protocols are divided into the following two categories based on their use of connections :
+  = Connection-Oriented Protocols These protocols require you to establish a logical connection between two devices before transferring data.
+    = This is generally accomplished by following a specific set of rules that specify how a connection should be initiated, negotiated, managed, 
+      and eventually terminated
+    = one device begins by sending a request to open a connection, and the other responds. The devices pass control information to determine if and 
+      how the connection should be set up
+  = Connectionless Protocols These protocols do not establish a connection between devices. As soon as a device has data to send to another, 
+    it just sends it

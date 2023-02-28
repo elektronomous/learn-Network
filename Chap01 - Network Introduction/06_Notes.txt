@@ -1,0 +1,15 @@
+= Since these transmission methods differ based on how many and which devices receive the transmission, 
+  they are tied directly to the methods used for addressing, as follows:
+  = Unicast Addressing Unicast delivery requires that a message should be addressed to a specific recipient. 
+    This is the most common type of messaging, so this addressing capability is present in almost all protocols
+  = Broadcast Addressing Broadcasts are normally implemented via a special address that is reserved for that 
+    function. Whenever devices see a message sent to that address, they all interpret it as “This message goes to everyone.”
+  = Multicast Addressing Multicasts are the most complex type of message because they require a means of identifying a 
+    set of specific devices that will receive a message. It is often necessary to create several such groups, which may or may not partially
+    overlap in their membership. Some mechanism is needed to manage which devices are in which groups
+= Three basic methods are used to address and transmit data between networked devices. A unicast transmission goes from
+  one device to exactly one other; this is the most common method used for most message transactions. 
+= A broadcast transmission is sent from one device to all connected devices on a network. 
+= A multicast transmission is addressed and sent to a select group of devices
+= one special case in the field of addressing is worth mentioning. In some networks or links, only two devices are 
+  connected together, forming what is often called a point-to-point network

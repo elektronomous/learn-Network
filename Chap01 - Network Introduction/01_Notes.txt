@@ -14,7 +14,7 @@
   administration. It is also necessary to manage a network to keep it running smoothly and to
   address possible misuse or abuse issues. Data security also becomes a much bigger concern
   when computers are connected together
-= Networking technologies are most often compartmentalized in this manner by
+= Networking technologies are most often compartmentalized(terkotak - kotak) in this manner by
   dividing their functions into layers, each of which contains hardware and software
   lements
   = Each layer is responsible for performing a particular type of task and
@@ -34,7 +34,7 @@
     which consists of seven stacked layers
   = These range from the physical layer (layer 1) at the bottom, which is responsible for lowlevel
     signaling
-    = to the application layer (layer 7) at the top, where application software is implemented. 
+  = to the application layer (layer 7) at the top, where application software is implemented. 
 = An architecture is essentially a set of rules that describes the function of some portion
   of the hardware and software that constitutes a stack of layers
   = Such a ruleset usually takes the form of a specification or standard that describes how equipment and
