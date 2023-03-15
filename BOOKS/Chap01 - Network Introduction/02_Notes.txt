@@ -39,4 +39,4 @@
     = one device begins by sending a request to open a connection, and the other responds. The devices pass control information to determine if and 
       how the connection should be set up
   = Connectionless Protocols These protocols do not establish a connection between devices. As soon as a device has data to send to another, 
-    it just sends it
+    it just sends it 

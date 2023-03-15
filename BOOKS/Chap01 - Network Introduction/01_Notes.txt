@@ -16,7 +16,7 @@
   when computers are connected together
 = Networking technologies are most often compartmentalized(terkotak - kotak) in this manner by
   dividing their functions into layers, each of which contains hardware and software
-  lements
+  elements
   = Each layer is responsible for performing a particular type of task and
     interacts with the layers above and below it
   = Layers are conceptually arranged into a vertical stack
