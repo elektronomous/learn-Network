@@ -1,0 +1,33 @@
+= Over time, a collection of terms has evolved in the networking world to describe the relative sizes of larger 
+  and smaller networks. Some of the most common ones are as follows:
+  = Network This is the least specific of the terms mentioned here. Basically, a network can be pretty much any size,
+    from two devices to thousands. When networks get very large, however, and are clearly comprised of smaller 
+    networks connected together, they are often no longer called networks but internetworks, as you will see momentarily.
+    Despite this, it is fairly common to hear someone refer to something like “Microsoft’s corporate network,” which 
+    obviously contains thousands or even tens of thousands of machines.
+  = Subnetwork (Subnet) A subnetwork is a portion of a network, or a network that is part of a larger internetwork. This 
+    term is also a rather subjective one; subnetworks can be rather large when they are part of a network that is very large.
+    The abbreviated term subnet can refer generically to a subnetwork, but also has a specific meaning in the context of 
+    TCP/IP addressing
+  = Segment (Network Segment) A segment is a small section of a network. In some contexts, a segment is the same as a 
+    subnetwork and the terms are used interchangeably. More often, however, the term segment implies something smaller than a
+    subnetwork. Networks are often designed so that, for the sake of efficiency, computers that are related to each other or 
+    that are used by the same groups of people are put on the same network segment.
+= Some LAN technologies—including Ethernet—use the term segment to refer specifically to a collection of geographically 
+  proximate machines that are connected directly to each other, either by a single cable or single device such as a hub
+= An important example of the latter definition is TCP/IP, in which a network usually refers to a collection of machines that
+  are linked at layer 2 of the OSI Reference Model, using technologies like Ethernet or Token Ring, as well as interconnection
+  devices such as hubs and switches
+= An internetwork is formed when these networks are linked together at layer 3, using routers that pass IP datagrams between networks
+= Traditionally, a segment referred to a specific cable
+  = The earliest forms of Ethernet used coaxial cables, and the coaxial cable segment was shared and became the collision domain for the network
+= Thus today a segment can refer either to a specific piece of cable or to a collection of cables connected electrically that represent a
+  single collision domain
+= Collision domain is a term that refers generally to a collection of hardware devices in which only one can transmit at a time
+= The term intranet was coined to refer to an internal
+= network that functioned like a private Internet. It comes from the prefix intra, which means within. In fact, most intranets are internetworks 
+  as well
+= If an intranet is extended to allow access to it not only by people or groups strictly from within the organization, but also by people or groups
+  outside the main company, this is sometimes called an extranet. Extra, of course, is a prefix that means outside, or beyond
+= So, an extranet is a type of internal, private Internet that, well, isn’t entirely internal
+= An extranet is an extended intranet, which is really a type of internet that works like the Internet

@@ -1,0 +1,38 @@
+= Since the header and footer can contain both control and information fields, you might rightly 
+  wonder what the point is of having a separate footer anyway?
+  = One reason is that some types of control information are calculated using the values of the data itself
+  = In some cases, it is more efficient to perform this computation as the data payload is being sent, and 
+    then transmit the result after the payload in a footer
+  = A good example of a field often found in a footer is redundancy data such as cyclic redundancy check (CRC) 
+    code, which can be used for error detection by the receiving device
+= The general format of a networking message consists of a header, followed by the data or payload of the message, 
+  followed optionally by a footer. Header and footer information is functionally the same except for its position 
+  in the message; footer fields are only sometimes used, especially in cases where the data in the field is 
+  calculated based on the values of the data being transmitted.
+= Generally speaking, any particular protocol is concerned with only its own header
+  = just as a delivery person worries only about driving the truck and not so much about what it contains
+= a message handled by a particular protocol is said to be its PDU; 
+= the data it carries in its payload is its SDU
+= The SDU of a lower-layer protocol is usually a PDU of a higher-layer protocol
+= One is simply addressing the message—putting an address on it so that the system knows where it is supposed to go
+= Another is transmitting the message, which is sending it to its intended recipient
+= Bearing this analogy in mind, consider these three kinds of message transmissions, which are illustrated in Figure 1-4:
+  (02_Notes_4.JPG)
+  = Unicast Messages These are messages that are sent from one device to another device; they are not intended for others.
+    If you have a friend at this social event, this is the equivalent of pulling him aside for a private conversation. Of course,
+    there is still the possibility of someone else at the event overhearing your conversation—or even eavesdropping on it. The 
+    same is true in networking as well—addressing a message to a particular computer doesn’t guarantee that others won’t also read it;
+    it’s just that they normally will not do so
+  = Broadcast Messages As the name suggests, these messages are sent to every device on a network. You use them when you need to 
+    communicate a piece of information to everyone on the network, or when the sending station needs to send it to just one recipient, 
+    but doesn’t know its address. For example, suppose a new arrival at the social gathering saw in the parking lot a blue sedan with its
+    lights left on. She does not know who the car belongs to. The best way to communicate this information is to broadcast it by having 
+    the host make an announcement that will be heard by all, including the vehicle’s owner. In networks, broadcast messages are used for a 
+    variety of purposes, including finding the locations of particular stations or the devices that manage different services
+  = Multicast Messages These are a compromise between the previous two types. Multicast messages are sent to a group of stations that meet 
+    a particular set of criteria. These stations are usually related to each other in some way. For example, they serve a common function 
+    or are set up into a particular multicast group. (Note that you can also consider broadcast messages to be a special case of multicast in which
+    the group is “everyone.”) 
+    = Back to our analogy: This would be somewhat like a group of friends who go to this large social hall and then stay together in a 
+      small discussion group—or perhaps use radios to talk to each other from a distance. Multicasting requires special techniques that make 
+      clear who is in the intended group of recipients

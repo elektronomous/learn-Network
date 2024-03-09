@@ -1,0 +1,31 @@
+Today, the world of computer networking uses one networking model: TCP/IP. However, the world has
+not always been so simple. Once upon a time, networking protocols didn’t exist, including TCP/IP.
+Vendors created the first networking protocols; these protocols supported only that vendor’s computers.
+For example, IBM, the computer company with the largest market share in many markets back in the 1970s
+and 1980s, published its Systems Network Architecture (SNA) networking model in 1974. Other vendors also
+created their own proprietary(hak cipta) networking models. As a result, if your company bought computers from three
+vendors, network engineers often had to create three different networks based on the networking models
+created by each company, and then somehow connect those networks, making the combined networks much more
+complex. The left side of Image1.PNG shows the general idea of what a company’s enterprise network might 
+have looked like back in the 1980s, before TCP/IP became common in enterprise internetworks.
+
+Although vendor-defined proprietary networking models often worked well, having an open, vendor-neutral networking model
+would aid competition and reduce complexity. The International Organization for Standardization (ISO) took on the task to
+create such a model, starting as early as the late 1970s, beginning work on what would become known as the Open Systems
+Interconnection (OSI) networking model. ISO had a noble goal for the OSI model: to standardize data networking protocols
+to allow communication among all computers across the entire planet. ISO worked toward this ambitious and noble goal, with
+participants from most of the technologically developed nations on Earth participating in the process. A second, less-formal
+effort to create an open, vendor-neutral, public networking model sprouted forth from a U.S. Department of Defense (DoD)
+contract. Researchers at various universities volunteered to help further develop the protocols surrounding the original DoD
+work. These efforts resulted in a competing open networking model called TCP/IP. During the 1990s, companies began adding OSI,
+TCP/IP, or both to their enterprise networks. However, by the end of the 1990s, TCP/IP had become the common choice, and OSI fell
+away. The center part of Image1.PNG shows the general idea behind enterprise networks in that decade—still with networks built
+upon multiple networking models but including TCP/IP. Here in the twenty-first century, TCP/IP dominates. Proprietary networking
+models still exist, but they have mostly been discarded in favor of TCP/IP. The OSI model, whose development suffered in part
+because of a slower formal standardization process as compared with TCP/IP, never succeeded in the marketplace. And TCP/IP, the
+networking model originally created almost entirely by a bunch of volunteers, has become the most prolific network model ever, as
+shown on the right side of Image1.PNG. In this chapter, you will read about some of the basics of TCP/IP. Although you will learn
+some interesting facts about TCP/IP, the true goal of this chapter is to help you understand what a networking model or networking
+architecture really is and how it works. Also in this chapter, you will learn about some of the jargon used with OSI. Will any of you
+ever work on a computer that is using the full OSI protocols instead of TCP/IP? Probably not. However, you will often use terms 
+relating to OSI.
