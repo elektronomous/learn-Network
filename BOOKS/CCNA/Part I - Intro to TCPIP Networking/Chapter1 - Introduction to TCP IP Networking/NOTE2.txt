@@ -1,0 +1,117 @@
+TCP TRANSPORT LAYER
+
+Although many TCP/IP application layer protocols exist, the TCP/IP transport layer includes
+a smaller number of protocols. The two most commonly used transport layer protocols are
+the Transmission Control Protocol (TCP) and the User Datagram Protocol (UDP).
+How does a transport layer protocol provide a service to a higher-layer protocol? This section
+introduces that general concept by focusing on a single service provided by TCP: error recovery. 
+
+TCP ERROR RECOVERY BASICS 
+To appreciate what the transport layer protocols do, you must think about the layer above
+the transport layer, the application layer. Why? Well, each layer provides a service to the
+layer above it, like the error-recovery service provided to application layer protocols by TCP.
+
+For example, in Image3.PNG, Bob and Larry used HTTP to transfer the home page from web
+server Larry to Bob’s web browser. But what would have happened if Bob’s HTTP GET
+request had been lost in transit through the TCP/IP network? Or, what would have happened
+if Larry’s response, which included the contents of the home page, had been lost? Well, as
+you might expect, in either case, the page would not have shown up in Bob’s browser.
+
+TCP/IP needs a mechanism to guarantee delivery of data across a network. Because many
+application layer protocols probably want a way to guarantee delivery of data across a network, 
+the creators of TCP included an error-recovery feature. To recover from errors, TCP
+uses the concept of acknowledgments. Image5.PNG outlines the basic idea behind how TCP
+notices lost data and asks the sender to try again.
+
+Image5.PNG shows web server Larry sending a web page to web browser Bob, using three separate messages.
+Note that this figure shows the same HTTP headers as Image4.PNG, but it also shows a TCP header. The TCP
+header shows a sequence number (SEQ) with each message. In this example, the network has a problem, and 
+the network fails to deliver the TCP message (called a segment) with sequence number 2. When Bob receives
+messages with sequence numbers 1 and 3, but does not receive a message with sequence number 2, Bob realizes
+that message 2 was lost. That realization by Bob’s TCP logic causes Bob to send a TCP segment back to Larry,
+asking Larry to send message 2 again.
+
+SAME-LAYER AND ADJACENT-LAYER INTERACTION (Image6.PNG)
+Image5.PNG also demonstrates a function called adjacent-layer interaction, which refers to the concepts of
+how adjacent layers in a networking model, on the same computer, work together. In this example, the higher-
+layer protocol (HTTP) wants error recovery, so it uses the next lower-layer protocol (TCP) to perform the
+service of error recovery; the lower layer provides a service to the layer above it.
+
+Image5.PNG also shows an example of a similar function called same-layer interaction. When a particular layer
+on one computer wants to communicate with the same layer on another computer, the two computers use headers to
+hold the information that they want to communicate. For example, in Image5.PNG, Larry set the sequence numbers
+to 1, 2, and 3 so that Bob could notice when some of the data did not arrive. Larry’s TCP process created that
+TCP header with the sequence number; Bob’s TCP process received and reacted to the TCP segments.
+
+TCP/IP NETWORK LAYER
+The TCP/IP network layer includes a small number of protocols, but only one major protocol: the Internet 
+Protocol (IP). In fact, the name TCP/IP is simply the names of the two most common protocols (TCP and IP)
+separated by a /. IP provides several features, most importantly, addressing and routing. 
+
+INTERNET PROTOCOL AND THE POSTAL SERVICES
+Imagine that you just wrote two letters: one to a friend on the other side of the country (local) and one to a
+friend on the other side of town. You addressed the envelopes and put on the stamps, so both are ready to give to the
+postal service. Is there much difference in how you treat each letter? Not really. Typically, you would just put
+them in the same mailbox and expect the postal service to deliver both letters. The postal service, however, must
+think about each letter separately, and then make a decision of where to send each letter so that it is delivered.
+For the letter sent across town, the people in the local post office probably just need to put the letter on 
+another truck. For the letter that needs to go across the country, the postal service sends the letter to another
+post office, then another, and so on, until the letter gets delivered across the country. At each post office, the
+postal service must process the letter and choose where to send it next. To make it all work, the postal service 
+has regular routes for small trucks, large trucks, planes, boats, and so on, to move letters between postal service
+sites. The service must be able to receive and forward the letters, and it must make good decisions about where to
+send each letter next, as shown in Image7.PNG.
+
+Still thinking about the postal service, consider the difference between the person sending the letter and the work
+that the postal service does. The person sending the letters expects that the postal service will deliver the letter 
+most of the time. However, the person sending the letter does not need to know the details of exactly what path the
+letters take. In contrast, the postal service does not create the letter, but it accepts the letter from the customer.
+Then, the postal service must know the details about addresses and postal codes that group addresses into larger groups,
+and it must have the ability to deliver the letters. The TCP/IP application and transport layers act like the person
+sending letters through the postal service. These upper layers work the same way regardless of whether the endpoint
+host computers are on the same LAN or are separated by the entire Internet. To send a message, these upper layers ask
+the layer below them, the network layer, to deliver the message. The lower layers of the TCP/IP model act more like the
+postal service to deliver those messages to the correct destinations. To do so, these lower layers must understand the
+underlying physical network because they must choose how to best deliver the data from one host to another.
+
+So, what does this all matter to networking? Well, the network layer of the TCP/IP networking model, primarily defined
+by the Internet Protocol (IP), works much like the postal service. IP defines that each host computer should have a
+different IP address, just as the postal service defines addressing that allows unique addresses for each house, apartment,
+and business. Similarly, IP defines the process of routing so that devices called routers can work like the post office,
+forwarding packets of data so that they are delivered to the correct destinations. Just as the postal service created the
+necessary infrastructure to deliver letters—post offices, sorting machines, trucks, planes, and personnel—the network layer
+defines the details of how a network infrastructure should be created so that the network can deliver data to all computers
+in the network.
+
+INTERNET PROTOCOL ADDRESSING BASICS
+IP defines addresses for several important reasons. First, each device that uses TCP/IP—each TCP/IP host—needs a unique 
+address so that it can be identified in the network. IP also defines how to group addresses together, just like the postal
+system groups addresses based on postal codes (like ZIP codes in the United States).
+
+To understand the basics, examine Image8.PNG, which shows the familiar web server Larry and web browser Bob; but now, 
+instead of ignoring the network between these two computers, part of the network infrastructure is included.
+First, note that Image8.PNG shows some sample IP addresses. Each IP address has four numbers, separated by periods. In this
+case, Larry uses IP address 1.1.1.1, and Bob uses 2.2.2.2. This style of number is called a dotted-decimal notation (DDN).
+
+Figure 1-9 also shows three groups of addresses. In this example, all IP addresses that begin with 1 must be on the upper left,
+as shown in shorthand in the figure as 1.__.__.__. All addresses that begin with 2 must be on the right, as shown in shorthand
+as 2.__.__.__. Finally, all IP addresses that begin with 3 must be at the bottom of the figure.
+
+IP ROUTING BASICS
+
+NOTE: The term IP host refers to any device, regardless of size or power, that has an IP address and connects to any TCP/IP
+network.
+
+Image9.PNG repeats the familiar case in which web server Larry wants to send part of a web page to Bob, but now with details
+related to IP. On the lower left, note that server Larry has the familiar application data, HTTP header, and TCP header ready
+to send. In addition, the message now contains an IP header. The IP header includes a source IP address of Larry’s IP address
+(1.1.1.1) and a destination IP address of Bob’s IP address (2.2.2.2).
+
+Step 1, on the left of Image9.PNG, begins with Larry being ready to send an IP packet. Larry’s IP process chooses to send the
+packet to some router—a nearby router on the same LAN—with the expectation that the router will know how to forward the packet.
+(This logic is much like you or me sending all our letters by putting them in a nearby mailbox.) 
+At Step 2, Router R1 receives the IP packet, and R1’s IP process makes a decision. R1 looks at the destination address (2.2.2.2),
+compares that address to its known IP routes, and chooses to forward the packet to Router R2. This process of forwarding the IP
+packet is called IP routing (or simply routing).
+At Step 3, Router R2 repeats the same kind of logic used by Router R1. R2’s IP process will compare the packet’s destination IP
+address (2.2.2.2) to R2’s known IP routes and make a choice to forward the packet to the right, on to Bob.

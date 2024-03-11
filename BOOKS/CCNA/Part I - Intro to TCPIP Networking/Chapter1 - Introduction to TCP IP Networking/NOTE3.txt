@@ -1,0 +1,87 @@
+TCP/IP DATA-LINK AND PHYSICAL LAYER
+The TCP/IP model’s data-link and physical layers define the protocols and hardware required to deliver
+data across some physical network. The two work together quite closely; in fact, some standards define
+both the data-link and physical layer functions. 
+When a host’s or router’s IP process chooses to send an IP packet to another router or host, that host
+or router then uses link-layer details to send that packet to the next host/router.
+
+Because each layer provides a service to the layer above it, take a moment to think about the IP logic
+related to Image9.PNG. In that example, host Larry’s IP logic chooses to send the IP. packet to a nearby
+router (R1). However, while Image9.PNG shows a simple line between Larry and router R1, that drawing
+means that some Ethernet LAN sits between the two. Image10.PNG shows four steps of what occurs at the
+link layer to allow Larry to send the IP packet to R1.
+
+Image10.PNG shows four steps. The first two occur on Larry, and the last two occur on Router R1, as 
+follows:
+    Step 1. Larry encapsulates the IP packet between an Ethernet header and Ethernet
+            trailer, creating an Ethernet frame.
+    Step 2. Larry physically transmits the bits of this Ethernet frame, using electricity
+            flowing over the Ethernet cabling.
+    Step 3. Router R1 physically receives the electrical signal over a cable and re-creates the
+            same bits by interpreting the meaning of the electrical signals.
+    Step 4. Router R1 de-encapsulates the IP packet from the Ethernet frame by removing
+            and discarding the Ethernet header and trailer.
+
+The data-link and physical layers include a large number of protocols and standards. For example, the link
+layer includes all the variations of Ethernet protocols and wireless LAN protocols discussed throughout 
+this book. In short, the TCP/IP physical and data-link layers include two distinct functions, respectively:
+functions related to the physical transmission of the data, plus the protocols and rules that control the
+use of the physical media
+
+DATA ENCAPSULATION TERMINOLOGY
+when sending data, each layer adds its own header (and for data-link protocols, also a trailer) to the data
+supplied by the higher layer. The term encapsulation refers to the process of putting headers (and sometimes
+trailers) around some data.
+
+Many of the examples in this chapter show the encapsulation process. For example, web server Larry 
+encapsulated the contents of the home page inside an HTTP header in Image4.PNG. The TCP layer encapsulated
+the HTTP headers and data inside a TCP header in Image5.PNG. IP encapsulated the TCP headers and the data
+inside an IP header in Image9.PNG. Finally, the Ethernet link layer encapsulated the IP packets inside both
+a header and a trailer in Image10.PNG.
+
+The process by which a TCP/IP host sends data can be viewed as a five-step process. The first four steps 
+relate to the encapsulation performed by the four TCP/IP layers, and the last step is the actual physical
+transmission of the data by the host. In fact, if you use the fivelayer TCP/IP model, one step corresponds
+to the role of each layer:
+
+    Step 1. Create and encapsulate the application data with any required application
+            layer headers. For example, the HTTP OK message can be returned in an HTTP
+            header, followed by part of the contents of a web page.
+    Step 2. Encapsulate the data supplied by the application layer inside a transport
+            layer header. For end-user applications, a TCP or UDP header is typically used.
+    Step 3. Encapsulate the data supplied by the transport layer inside a network layer
+            (IP) header. IP defines the IP addresses that uniquely identify each computer.
+    Step 4. Encapsulate the data supplied by the network layer inside a data-link layer
+            header and trailer. This layer uses both a header and a trailer.
+    Step 5. Transmit the bits. The physical layer encodes a signal onto the medium to
+            transmit the frame.
+
+The numbers in Image11.PNG correspond to the five steps in this list, graphically showing the same concepts.
+Note that because the application layer often does not need to add a header, the figure does not show a 
+specific application layer header, but the application layer will also at times add a header as well.
+
+NAMES OF TCP/IP MESSAGES
+When talking and writing about networking, people use segment, packet, and frame to refer to the messages 
+shown in Image12.PNG and the related list. segment for the transport layer, packet for the network layer, and
+frame for the link layer. Image12.PNG shows each layer along with the associated term.
+
+OSI NETWORKING MODEL AND TERMINOLOGY (istilah - istilah)
+During those years in which many people thought the OSI model would become commonplace in the world of 
+networking (mostly in the late 1980s and early 1990s), many vendors and protocol documents started using 
+terminology from the OSI model. That terminology remains today.
+Note that the TCP/IP model in use today, on the right side of the figure(Image13.PNG), uses the exact same layer names as
+OSI at the lower layers. The functions generally match as well, so for the purpose of discussing networking,
+and reading networking documentation, think of the bottom four layers as equivalent, in name, in number, and
+in meaning.
+Even though the world uses TCP/IP today rather than OSI, we tend to use the numbering from the OSI layer. For
+instance, when referring to an application layer protocol in a TCP/IP network, the world still refers to the
+protocol as a “Layer 7 protocol.” Also, while TCP/IP includes more functions at its application layer, OSI 
+breaks those intro session, presentation, and application layers. Most of the time, no one cares much about
+the distinction, so you will see references like “Layer 5–7 protocol,” again using OSI numbering.
+
+OSI DATA ENCAPSULATION TERMINOLOGY
+OSI uses a more generic term to refer to messages, rather than frame, packet, and segment. OSI uses the term 
+protocol data unit (PDU). A PDU represents the bits that include the headers and trailers for that layer, as
+well as the encapsulated data. For example, an IP packet, as shown in Image14.PNG, using OSI terminology, is
+a PDU, more specifically a Layer 3 PDU (abbreviated L3PDU) because IP is a Layer 3 protocol. OSI simply refers
+to the Layer x PDU (LxPDU), with x referring to the number of the layer being discussed, as shown in Image14.PNG.
