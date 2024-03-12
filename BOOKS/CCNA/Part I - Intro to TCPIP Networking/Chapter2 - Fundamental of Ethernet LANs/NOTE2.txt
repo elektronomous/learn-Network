@@ -1,0 +1,114 @@
+BUILDING PHYSICAL ETHERNET LANs WITH UTP (unshielded Twisted Pair)
+While it is true that Ethernet sends data over UTP cables, the physical means to send the data
+uses electricity that flows over the wires inside the UTP cable. To better understand how 
+Ethernet sends data using electricity, break the idea down into two parts: how to create an
+electrical circuit and then how to make that electrical signal communicate 1s and 0s.
+
+First, to create one electrical circuit, Ethernet defines how to use the two wires inside a 
+single twisted pair of wires, as shown in Image8.PNG. The figure does not show a UTP cable
+between two nodes, but instead shows two individual wires that are inside the UTP cable.
+
+    .-----.
+    | | | | -> UTP connector
+    |_|_|_|
+      | |
+      | |   -> two wires inside UTP cable.
+      | |
+
+An electrical circuit requires a complete loop, so the two nodes, using circuitry on their 
+Ethernet ports, connect the wires in one pair to complete a loop, allowing electricity to flow.
+
+To send data, the two devices follow some rules called an encoding scheme. The idea works a lot
+like when two people talk using the same language: The speaker says some words in a particular
+language, and the listener, because she speaks the same language, can understand the spoken 
+words. With an encoding scheme, the transmitting node changes the electrical signal over time,
+while the other node, the receiver, using the same rules, interprets those changes as either 0s
+or 1s. (For example, 10BASE-T uses an encoding scheme that encodes a binary 0 as a transition 
+from higher voltage to lower voltage during the middle of a 1/10,000,000th-of-a-second interval)
+
+Note that in an actual UTP cable, the wires will be twisted together, instead of being parallel 
+as shown in Image8.PNG. 
+    ><>-<>-<>-<>-<>-<>-<>-<>-<>-     => twisted 
+    .---------------------------    
+    |___________________________    => parallel 
+
+The twisting helps solve some important physical transmission issues. When electrical current 
+passes over any wire, it creates electromagnetic interference (EMI) that interferes with the 
+electrical signals in nearby wires, including the wires in the same cable. (EMI between wire pairs
+in the same cable is called crosstalk.) Twisting the wire pairs together helps cancel out most of
+the EMI, so most networking physical links that use copper wires use twisted pairs.
+    
+BREAKING DOWN A UTP ETHERNET LINK
+To learn about how a UTP Ethernet link works, it helps to break down the physical link into those
+basic pieces, as shown in Image9.PNG: the cable itself, the connectors on the ends of the cable, and
+the matching ports on the devices into which the connectors will be inserted. 
+
+First, think about the UTP cable itself. The cable holds some copper wires, grouped as twisted pairs.
+The 10BASE-T and 100BASE-T standards require two pairs of wires(4 wires), while the 1000BASE-T standard
+requires four pairs(8 wires). Each wire has a color-coded plastic coating(lapisan plastika kode warna),
+with the wires in a pair having a color scheme(pola warna). For example, for the blue wire pair, one
+wire’s coating is all blue, while the other wire’s coating is blue-and-white striped. (Image10.PNG)
+
+Many Ethernet UTP cables use an RJ-45 connector on both ends. The RJ-45 connector has eight physical
+locations into which the eight wires in the cable can be inserted, called pin positions, or simply pins.
+These pins create a place where the ends of the copper wires can touch the electronics inside the nodes
+at the end of the physical link so that electricity can flow.
+
+PCs often include this RJ-45 Ethernet port as part of a network interface card (NIC), which can be an
+expansion card on the PC or can be built in to the system itself. Switches typically have many RJ-45 ports
+because switches give user devices a place to connect to the Ethernet LAN. Image11.PNG shows photos of the
+cables, connectors, and ports.
+
+Cisco LAN switches often support other types of connectors as well. To give its customers flexibility as to
+the type of Ethernet links, even after the customer has bought the switch, Cisco switches include some 
+physical ports whose port hardware (the transceiver) can be changed later, after you purchase the switch.
+
+For example, Image12.PNG shows a photo of a Cisco switch with one of the swappable transceivers. In this case,
+the figure shows an enhanced(tambahan) small form-factor pluggable (SFP+) transceiver, which runs at 10 Gbps, just
+outside two SFP+ slots on a Cisco 3560CX switch. The SFP+ itself is the silver-colored part below the switch,
+with a black cable connected to it.
+
+Gigabit Ethernet Interface Converter (GBIC): The original form factor for a removable transceiver for Gigabit 
+                                             interfaces; larger than SFPs (Image13.PNG)
+Small Form Pluggable (SFP): The replacement for GBICs, used on Gigabit interfaces, with a smaller size, taking
+                            less space on the side of the networking card or switch.
+Small Form Pluggable Plus (SFP+): Same size as the SFP, but used on 10-Gbps interfaces. (The Plus refers to the
+                                  increase in speed compared to SFPs.)
+
+UTP CABLING PINOUTS FOR 10BASE-T AND 100BASE-T
+You could drive the truck all over the ranch(peternakan), any place you wanted to go, and the police would not
+mind. However, as soon as you get on the public roads, the police want you to behave and follow the rules.
+some important rules for Ethernet cabling: the rules of the road so that all the devices send data using the
+right wires inside the cable.
+
+STRAIGHT-THROUGH CABLE PINOUT (posisi pin)
+10BASE-T and 100BASE-T use two pairs of wires in a UTP cable, one for each direction, as shown in Image14.PNG. In
+this example, the PC on the left transmits using the top pair, and the switch on the right transmits using the 
+bottom pair. (Now compare with Image15.PNG) 
+
+in Image14.PNG, the transmitter on the PC on the left must know the pin positions of the two wires it should use 
+to transmit. Those two wires must be connected to the correct pins in the RJ-45 connector on the switch so that
+the switch’s receiver logic can use the correct wires. As a rule, Ethernet NIC transmitters use the pair connected
+to pins 1 and 2; the NIC receivers use a pair of wires at pin positions 3 and 6. LAN switches, knowing those facts
+about what Ethernet NICs do, do the opposite: Their receivers use the wire pair at pins 1 and 2, and their 
+transmitters use the wire pair at pins 3 and 6.
+
+The term pinout refers to the wiring of which color wire is placed in each of the eight numbered pin positions in
+the RJ-45 connector. An Ethernet straightthrough cable connects the wire at pin 1 on one end of the cable to pin 1
+at the other end of the cable; the wire at pin 2 needs to connect to pin 2 on the other end of the cable; pin 3 on
+one end connects to pin 3 on the other, and so on, as seen in Figure 2-10. Also, it uses the wires in one wire pair
+at pins 1 and 2, and another pair at pins 3 and 6.
+
+Image17.PNG shows one final perspective on the straight-through cable pinout. In this case, PC Larry connects to a
+LAN switch. Note that the figure again does not show the UTP cable, but instead shows the wires that sit inside the
+cable, to emphasize the idea of wire pairs and pins.
+
+However, when two like devices connect to an Ethernet link, they both transmit on the same pins. In that case, you
+then need another type of cabling pinout called a crossover cable. The crossover cable pinout crosses the pair at
+the transmit pins on each device to the receive pins on the opposite device. 
+
+While that previous sentence is true, this concept is much clearer with a figure such as Figure Image18.PNG. The two
+switches both transmit on the pair at pins 3 and 6, and they both receive on the pair at pins 1 and 2. So, the cable
+must connect a pair at pins 3 and 6 on each side to pins 1 and 2 on the other side, connecting to the other node’s
+receiver logic. The top of the figure shows the literal pinouts, and the bottom half shows a conceptual diagram.
+(Now see Image20.PNG)

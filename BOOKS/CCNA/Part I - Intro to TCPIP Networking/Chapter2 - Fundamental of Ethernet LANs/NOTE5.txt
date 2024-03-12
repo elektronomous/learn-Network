@@ -1,0 +1,125 @@
+IDENTIFYING NETWORK LAYER PROTOCOLS WITH THE ETHERNET TYPE FIELD
+The Ethernet Type field, or EtherType, sits in the Ethernet data-link layer header, but its
+purpose is to directly help the network processing on routers and hosts. Basically, the Type
+field identifies the type of network layer (Layer 3) packet that sits inside the Ethernet frame.
+First, think about what sits inside the data part of the Ethernet frame shown earlier in Figure
+Image26.PNG. Typically, it holds the network layer packet created by the network layer protocol on
+some device in the network. Over the years, those protocols have included IBM Systems Network 
+Architecture (SNA), Novell NetWare, Digital Equipment Corporation’s DECnet, and Apple Computer’s
+AppleTalk. Today, the most common network layer protocols are both from TCP/IP: IP version 4 (IPv4)
+and IP version 6 (IPv6).
+
+what number should the sender put in the header to identify an IPv4 packet as the type? Or an IPv6
+packet? As it turns out, the IEEE manages a list of EtherType values, so that every network layer
+protocol that needs a unique EtherType value can have a number. The sender just has to know the list.
+(Anyone can view the list; just go to www.ieee.org and search for EtherType. go check Eth.txt)
+
+For example, a host can send one Ethernet frame with an IPv4 packet and the next Ethernet frame with
+an IPv6 packet. Each frame would have a different Ethernet Type field value, using the values reserved
+by the IEEE, as shown in Image28.PNG.
+
+ERROR DETECTION WITH FCS
+Ethernet also defines a way for nodes to find out whether a frame’s bits changed while crossing over 
+an Ethernet link. (Usually, the bits could change because of some kind of electrical interference, or a
+bad NIC.) Ethernet, like most data-link protocols, uses a field in the datalink trailer for the purpose
+of error detection.
+
+The Ethernet Frame Check Sequence (FCS) field in the Ethernet trailer—the only field in the Ethernet 
+trailer—gives the receiving node a way to compare results with the sender, to discover whether errors 
+occurred in the frame. The sender applies a complex math formula to the frame before sending it, storing
+the result of the formula in the FCS field. The receiver applies the same math formula to the received 
+frame. The receiver then compares its own results with the sender’s results. If the results are the same,
+the frame did not change; otherwise, an error occurred, and the receiver discards the frame.
+
+Note that error detection does not also mean error recovery. Ethernet defines that the errored frame 
+should be discarded, but Ethernet does not attempt to recover the lost frame. Other protocols, notably TCP,
+recover the lost data by noticing that it is lost and sending the data again.
+
+SENDING ETHERNET FRAMES WITH SWITCHES AND HUBS
+Basically, the use of more modern switches allows the use of full-duplex logic, which is much faster and
+simpler than half-duplex logic, which is required when using hubs.
+
+SENDING IN MODERN ETHERNET LANs USING FULL-DUPLEX
+(Image29.PNG):
+Following the steps in the figure:
+    1. PC1 builds and sends the original Ethernet frame, using its own MAC address as the
+    source address and PC2’s MAC address as the destination address.
+    2. Switch SW1 receives and forwards the Ethernet frame out its G0/1 interface (short for
+    Gigabit interface 0/1) to SW2.
+    3. Switch SW2 receives and forwards the Ethernet frame out its F0/2 interface (short for
+    Fast Ethernet interface 0/2) to PC2.
+    4. PC2 receives the frame, recognizes the destination MAC address as its own, and processes the frame.
+
+The Ethernet network in Image29.PNG uses full duplex on each link, but the concept might be difficult to see.
+Full duplex means that that the NIC or switch port has no half-duplex restrictions. So, to understand full 
+duplex, you need to understand half duplex, as follows:
+    Half duplex: The device must wait to send if it is currently receiving a frame; in other
+                 words, it cannot send and receive at the same time.
+    Full duplex: The device does not have to wait before sending; it can send and receive at
+                 the same time.
+
+So, with all PCs and LAN switches, and no LAN hubs, all the nodes can use full duplex. in Image29.PNG, PC1 and
+PC2 could send frames to each other simultaneously, in both directions, without any half-duplex restrictions.
+
+USING HALF DUPLEX WITH LAN HUBS
+When the IEEE first introduced 10BASE-T in 1990, Ethernet switches did not exist yet; instead, networks used a
+device called a LAN hub. Like a switch, a LAN hub provided a number of RJ-45 ports as a place to connect links
+to PCs; however, hubs used different rules for forwarding data.
+
+LAN hubs forward data using physical layer standards rather than data-link standards and are therefore considered
+to be Layer 1 devices. When an electrical signal comes in one hub port, the hub repeats that electrical signal out
+all other ports (except the incoming port). By doing so, the data reaches all the rest of the nodes connected to 
+the hub, so the data hopefully reaches the correct destination. The hub has no concept of Ethernet frames, of 
+addresses, making decisions based on those addresses, and so on. 
+
+The downside of using LAN hubs is that if two or more devices transmitted a signal at the same instant, the 
+electrical signal collides and becomes garbled(kacau). The hub repeats all received electrical signals, even if it
+receives multiple signals at the same time. For example, Image30.PNG shows the idea, with PCs Archie and Bob sending
+an electrical signal at the same instant of time (at Steps 1A and 1B) and the hub repeating both electrical signals
+out toward Larry on the left (Step 2).
+
+If you replace the hub in Image30.PNG with a LAN switch, the switch prevents the collision on the left. The switch
+operates as a Layer 2 device, meaning that it looks at the data-link header and trailer. A switch would look at the
+MAC addresses, and even if the switch needed to forward both frames to Larry on the left, the switch would send one
+frame and queue the other frame until the first frame was finished.
+
+To prevent these collisions, the Ethernet nodes must use half-duplex logic instead of full-duplex logic. A problem
+occurs only when two or more devices send at the same time; half-duplex logic tells the nodes that if someone else
+is sending, wait before sending.
+
+For example, back in Image30.PNG, imagine that Archie began sending his frame early enough so that Bob received the
+first bits of that frame before Bob tried to send his own frame. Bob, at Step 1B, would notice that he was receiving
+a frame from someone else, and using halfduplex logic, would simply wait to send the frame listed at Step 1B.
+
+Nodes that use half-duplex logic actually use a relatively well-known algorithm called carrier sense multiple access
+with collision detection (CSMA/CD). The algorithm takes care of the obvious cases but also the cases caused by 
+unfortunate timing. For example, two nodes could check for an incoming frame at the exact same instant, both realize
+that no other node is sending, and both send their frames at the exact same instant, causing a collision. CSMA/CD 
+covers these cases as well, as follows:
+
+    Step 1. A device with a frame to send listens until the Ethernet is not busy.
+    Step 2. When the Ethernet is not busy, the sender begins sending the frame.
+    Step 3. The sender listens while sending to discover whether a collision occurs; collisions might be caused by 
+            many reasons, including unfortunate timing. If a collision occurs, all currently sending nodes do the
+            following:
+         A. They send a jamming signal that tells all nodes that a collision happened.
+         B. They independently choose a random time to wait before trying again,
+            to avoid unfortunate timing.
+         C. The next attempt starts again at Step 1.
+
+Each NIC and switch port has a duplex setting. For all links between PCs and switches, or between switches, use full
+duplex. However, for any link connected to a LAN hub, the connected LAN switch and NIC port should use half duplex. Note
+that the hub itself does not use half-duplex logic, instead just repeating incoming signals out every other port.
+
+Image31.PNG shows an example, with full-duplex links on the left and a single LAN hub on the right. The hub then requires
+SW2’s F0/2 interface to use half-duplex logic, along with the PCs connected to the hub
+
+note that the discussion of full and half duplex connects to two specific terms from CCNA exam topic 1.3.b, but those
+connections may not be obvious. First, the term Ethernet shared media (from the exam topic) refers to designs that use 
+hubs, require CSMA/CD, and therefore share the bandwidth. The idea behind the term comes from the fact that the devices
+connected to the hub share the network because they must use CSMA/CD, and CSMA/CD enforces rules that allow only one device
+to successfully send a frame at any point in time.
+
+the term Ethernet point-to-point in that same exam topic emphasizes the fact that in a network built with switches, each 
+(point-to-point) link works independently of the others. Because of the full-duplex logic discussed in this section, a
+frame can be sent on every point-to-point link in an Ethernet at the same time.

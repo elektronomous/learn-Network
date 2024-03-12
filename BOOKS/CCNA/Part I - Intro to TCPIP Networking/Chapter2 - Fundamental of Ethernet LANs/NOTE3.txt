@@ -1,0 +1,110 @@
+CHOOSING THE RIGHT CABLE PINOUTS
+For the exam, you should be well prepared to choose which type of cable (straight-through or
+crossover) is needed in each part of the network. The key is to know whether a device acts
+like a PC NIC, transmitting at pins 1 and 2, or like a switch, transmitting at pins 3 and 6.
+Then, just apply the following logic:
+
+    Crossover cable: If the endpoints transmit on the same pin pair
+    Straight-through cable: If the endpoints transmit on different pin pairs
+
+Table 2-3 lists the devices and the pin pairs they use, assuming that they use 10BASE-T and
+100BASE-T
+
+    Transmits on Pins 1,2                       Transmits on Pins 3,6
+    PC NICs                                     Hubs
+    Routers                                     Switches
+    Wireless access point (Ethernet interface)  —
+
+For example, Figure 2-13 shows a campus LAN in a single building. In this case, several straight
+-through cables are used to connect PCs to switches. In addition, the cables connecting the 
+switches require crossover cables.
+
+NOTE If you have some experience with installing LANs, you might be thinking that you have used 
+the wrong cable before (straight-through or crossover), but the cable worked. Cisco switches have
+a feature called auto-mdix that notices when the wrong cable is used and automatically changes 
+its logic to make the link work. However, for the exams, be ready to identify whether the correct
+cable is shown in the figures.
+
+UTP CABLING PINOUTS FOR 1000BASE-T
+First, 1000BASE-T requires four wire pairs. Second, it uses more advanced electronics that allow
+both ends to transmit and receive simultaneously on each wire pair. However, the wiring pinouts
+for 1000BASE-T work almost identically to the earlier standards, adding details for the additional
+two pairs.
+
+The straight-through cable for 1000BASE-T uses the four wire pairs to create four circuits, but the
+pins need to match. It uses the same pinouts for two pairs as do the 10BASE-T and 100BASE-T standards,
+and it adds a pair at pins 4 and 5 and the final pair at pins 7 and 8, as shown in Image21.PNG. (for
+the color also exactly the same as the straight-through for 10BASE-T and the crossover version)
+
+The Gigabit Ethernet crossover cable crosses the same two-wire pairs as the crossover cable for the
+other types of Ethernet (the pairs at pins 1,2 and 3,6). It also crosses the two new pairs as well 
+(the pair at pins 4,5 with the pair at pins 7,8).
+
+BUILDING PHYSICAL ETHERNET LANs WITH FIBER
+In some cases, however, an engineer might prefer to use fiber cabling for some links in an Ethernet LAN,
+first to reach greater distances, but for other reasons as well.
+
+Fiber-optic cabling uses glass as the medium through which light passes, varying that light over time
+to encode 0s and 1s. It might seem strange at first to use glass given that most of us think of glass
+in windows. Window glass is hard, unbending, and if you hit or bend it enough, the glass will probably
+shatter—all bad characteristics for a cabling material.
+
+Instead, fiber-optic cables use fiberglass, which allows a manufacturer to spin a long thin string 
+(fiber) of flexible glass. A fiber-optic cable holds the fiber in the middle of the cable, allowing the
+light to pass through the glass—which is a very important attribute for the purposes of sending data.
+
+(Image22.PNG)
+The three outer layers of the cable protect the interior of the cable and make the cables easier to 
+install and manage, while the inner cladding and core work together to create the environment to allow
+transmission of light over the cable. A light source, called the optical transmitter, shines a light 
+into the core. Light can pass through the core; however, light reflects off the cladding back into the 
+core. Image23.PNG shows an example with a light emitting diode (LED) transmitter. You can see how the
+cladding reflects the light back into the core as it travels through the core.
+
+The figure(Image23.PNG) shows the normal operation of a multimode fiber, characterized by the fact that
+the cable allows for multiple angles (modes) of light waves entering the core.
+
+In contrast, single-mode fiber uses a smaller-diameter core, around one-fifth the diameter of common 
+multimode cables (see Image24.PNG). To transmit light into a much smaller core, a laser-based transmitter
+sends light at a single angle (hence the name single-mode).
+
+Multimode improves the maximum distances over UTP, and it uses less expensive transmitters as compared 
+with single-mode. Standards do vary; for instance, the standards for 10 Gigabit Ethernet over Fiber allow
+for distances up to 400m, which would often allow for connection of devices in different buildings in the
+same office park. Single-mode allows distances into the tens of kilometers, but with slightly more 
+expensive SFP/SFP+ hardware.
+
+To transmit between two devices, you need two cables, one for each direction, as shown in Image25.PNG. 
+Note that the transmit port on one device connects to a cable that connects to a receive port on the other
+device, and vice versa with the other cable.
+
+USING FIBER WITH ETHERNET
+Refer back to Image12.PNG, which shows a photo of a switch with two SFP+ ports, into which you could insert
+any of the supported SFP+ modules. Those SFP+ ports support a variety of 10-Gbps standards like those listed in
+Table 2-4.
+
+        Standard        Cable Type      Max Distance*
+        ――――――――――――――――――――――――――――――――――――――――――――――――――
+        10GBASE-S       MM              400m
+        10GBASE-LX4     MM              300m
+        10GBASE-LR      SM              10km
+        10GBASE-E       SM              30km
+        * The maximum distances are based on the IEEE standards with no repeaters
+
+UTP wins again on cost, because the cost goes up as you move from UTP, to multimode, and then to single-mode,
+due to the extra cost for the transmitters like the SFP and SFP+ modules. UTP has some negatives, however. First,
+UTP might work poorly in some electrically noisy environments such as factories, because UTP can be affected by 
+electromagnetic interference (EMI). Also, UTP cables emit a faint signal outside the cable, so highly secure 
+networks may choose to use fiber, which does not create similar emissions, to make the network more secure. 
+
+*The faint signal emitted outside of cables is known as leakage radiation. This occurs in various forms of signal
+ transmission technologies such as TV remotes, telephone and internet communications through optical fibers, and cell
+ phone conversations. These signals can be detected and copied, which highlights the need for secure communication methods.
+
+        Criteria                                        UTP     Multimode   Single-Mode
+        ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+        Relative Cost of Cabling                        Low     Medium      Medium
+        Relative Cost of a Switch Port                  Low     Medium      High
+        Approximate Max Distance                        100m    500m        40km
+        Relative Susceptibility to Interference         Some    None        None
+        Relative Risk of Copying from Cable Emissions   Some    None        None

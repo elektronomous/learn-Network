@@ -1,0 +1,104 @@
+SENDING DATA IN ETHERNET NETWORKS
+Although physical layer standards vary quite a bit, other parts of the Ethernet standards work
+the same regardless of the type of physical Ethernet link. 
+
+ETHERNET DATA-LINK PROTOCOLS
+The Ethernet data-link protocol defines the Ethernet frame: an Ethernet header at the front, the
+encapsulated data in the middle, and an Ethernet trailer at the end. Ethernet actually defines a
+few alternate formats for the header, with the frame format shown in Image26.PNG being commonly
+used today.
+
+Table 2-6 IEEE 802.3 Ethernet Header and Trailer Fields
+        Field           Bytes       Description
+        ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+        Preamble        7           Synchronization.
+
+        Start Frame     1           Signifies that the next byte begins the Destination MAC
+        Delimiter (SFD)             Address field.
+
+        Destination     6           Identifies the intended recipient of this frame.
+        MAC Address
+
+        Source MAC      6           Identifies the sender of this frame.
+        Address
+
+        Type            2           Defines the type of protocol listed inside the frame; today,
+                                    most likely identifies IP version 4 (IPv4) or IP version 6 (IPv6).
+
+        Data and Pad*   46–1500     Holds data from a higher layer, typically an L3PDU (usually
+                                    an IPv4 or IPv6 packet). The sender adds padding to meet the minimum length 
+                                    requirement for this field (46 bytes).
+
+        Frame Check     4           Provides a method for the receiving NIC to determine whether
+        Sequence (FCS)              the frame experienced transmission errors.
+
+*preamble = pembukaan
+* The IEEE 802.3 specification limits the data portion of the 802.3 frame to a minimum of 46 and a
+maximum of 1500 bytes. The term maximum transmission unit (MTU) defines the maximum Layer 3 packet
+that can be sent over a medium. Because the Layer 3 packet rests inside the data portion of an 
+Ethernet frame, 1500 bytes is the largest IP MTU allowed over an Ethernet.
+
+ETHERNET ADDRESSING
+Ethernet addresses, also called Media Access Control (MAC) addresses, are 6-byte-long (48-bit-long)
+binary numbers. For convenience, most computers list MAC addresses as 12-digit hexadecimal numbers.
+Cisco devices typically add some periods to the number for easier readability as well; for example,
+a Cisco switch might list a MAC address as 0000.0C12.3456.
+
+Most MAC addresses represent a single NIC or other Ethernet port, so these addresses are often 
+called a unicast Ethernet address. The term unicast is simply a formal way to refer to the fact that
+the address represents one interface to the Ethernet LAN. (This term also contrasts with two other
+types of Ethernet addresses, broadcast and multicast, which will be defined later in this section.)
+
+If two NICs tried to use the same MAC address, there could be confusion. (The problem would be like
+the confusion caused to the postal service if you and I both tried to use the same mailing address—
+would the postal service deliver mail to your house or mine?) If two PCs on the same Ethernet tried
+to use the same MAC address, to which PC should frames sent to that MAC address be delivered?
+
+Ethernet solves this problem using an administrative process so that, at the time of manufacture, 
+all Ethernet devices are assigned a universally unique MAC address. Before a manufacturer can build
+Ethernet products, it must ask the IEEE to assign the manufacturer a universally unique 3-byte code,
+called the organizationally unique identifier (OUI). The manufacturer agrees to give all NICs (and
+other Ethernet products) a MAC address that begins with its assigned 3-byte OUI. The manufacturer
+also assigns a unique value for the last 3 bytes, a number that manufacturer has never used with that
+OUI. As a result, the MAC address of every device in the universe is unique. (Image27.PNG)
+
+             ASSIGNED BY MANUFACTURES
+             |------|
+    AA:BB:CC:DD:EE:FF
+    |------|
+    IEEE OUI
+
+NOTE: The IEEE also calls these universal MAC addresses global MAC addresses.
+
+Ethernet addresses go by many names: LAN address, Ethernet address, hardware address, burned-in 
+address, physical address, universal address, or MAC address. For example, the term burned-in address
+(BIA) refers to the idea that a permanent MAC address has been encoded (burned into) the ROM chip on 
+the NIC. As another example, the IEEE uses the term universal address to emphasize the fact that the
+address assigned to a NIC by a manufacturer should be unique among all MAC addresses in the universe.
+
+In addition to unicast addresses, Ethernet also uses group addresses. Group addresses identify more 
+than one LAN interface card. A frame sent to a group address might be delivered to a small set of 
+devices on the LAN, or even to all devices on the LAN. In fact, the IEEE defines two general categories
+of group addresses for Ethernet: 
+
+    Broadcast address: Frames sent to this address should be delivered to all devices on the Ethernet LAN.
+                       It has a value of FFFF.FFFF.FFFF.
+    Multicast addresses: Frames sent to a multicast Ethernet address will be copied and forwarded to a 
+                         subset of the devices on the LAN that volunteers to receive frames sent to a
+                         specific multicast address.
+
+
+LAN Addressing                  Description
+Term or Feature
+――――――――――――――――――――――――――――――――――――――――――――――――
+MAC                             Media Access Control. 802.3 (Ethernet) defines the MAC sublayer of
+                                IEEE Ethernet.
+
+Ethernet address, NIC           Other names often used instead of MAC address. These terms
+address, LAN address            describe the 6-byte address of the LAN interface card.
+
+Burned-in address               The 6-byte address assigned by the vendor making the card.
+Unicast address                 A term for a MAC address that represents a single LAN interface.
+Broadcast address               An address that means “all devices that reside on this LAN right now.”
+Multicast address               On Ethernet, a multicast address implies some subset of all devices
+                                currently on the Ethernet LAN.

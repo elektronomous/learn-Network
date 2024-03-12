@@ -1,0 +1,106 @@
+Most enterprise computer networks can be separated into two general types of technology: 
+local-area networks (LANs) and wide-area networks (WANs). LANs typically connect nearby
+devices: devices in the same room, in the same building, or in a campus of buildings. In
+contrast, WANs connect devices that are typically relatively far apart. Together, LANs and
+WANs create a complete enterprise computer network, working together to do the job of a 
+computer network: delivering data from one device to another.
+
+Many types of LANs have existed over the years, but today’s networks use two general 
+types of LANs: Ethernet LANs and wireless LANs. Ethernet LANs happen to use cables for the
+links between nodes, and because many types of cables use copper wires, Ethernet LANs are
+often called wired LANs. Ethernet LANs also make use of fiber-optic cabling, which includes
+a fiberglass core that devices use to send data using light. In comparison to Ethernet, 
+wireless LANs do not use wires or cables, instead using radio waves for the links between
+nodes;
+
+OVERVIEW OF LANs
+The term Ethernet refers to a family of LAN standards that together define the physical and
+data-link layers of the world’s most popular wired LAN technology. The standards, defined by
+the Institute of Electrical and Electronics Engineers (IEEE), define the cabling, the 
+connectors on the ends of the cables, the protocol rules, and everything else required to
+create an Ethernet LAN.
+
+TYPICAL SOHO (SMALL OFFICE or HOME OFFICE) LANs
+First, the LAN needs a device called an Ethernet LAN switch, which provides many physical 
+ports into which cables can be connected. An Ethernet uses Ethernet cables, which is a general
+reference to any cable that conforms to any of several Ethernet standards. The LAN uses 
+Ethernet cables to connect different Ethernet devices or nodes to one of the switch’s Ethernet
+ports.
+
+Image1.PNG shows a drawing of a SOHO Ethernet LAN. The figure shows a single LAN switch, five
+cables, and five other Ethernet nodes: three PCs, a printer, and one network device called a
+router. (The router connects the LAN to the WAN, in this case to the Internet).
+
+Although Image1.PNG shows the switch and router as separate devices, many SOHO Ethernet LANs
+today combine the router and switch into a single device(Image2.PNG). Vendors sell consumer-grade 
+integrated networking devices that work as a router and Ethernet switch, as well as doing other
+functions. These devices typically have “router” on the packaging, but many models also have
+four-port or eight-port Ethernet LAN switch ports built in to the device.
+
+Wireless LANs, defined by the IEEE using standards that begin with 802.11, use radio waves to 
+send the bits from one node to the next. Most wireless LANs rely on yet another networking device:
+a wireless LAN access point (AP: Image3.PNG). The AP acts somewhat like an Ethernet switch, in 
+that all the wireless LAN nodes(devices) communicate with the wireless AP. If the network uses an
+AP that is a separate physical device, the AP then needs a single Ethernet link to connect the AP
+to the Ethernet LAN, as shown in Image4.PNG.
+
+Note that Image4.PNG shows the router, Ethernet switch, and wireless LAN access point as three 
+separate devices so that you can better understand the different roles. However, most SOHO networks
+today would use a single device, often labeled as a “wireless router,” that does all these functions.
+(Image3.PNG)
+
+TYPICAL ENTERPRISE LANs 
+enterprise Ethernet LANs begin with LAN switches installed in a wiring closet behind a locked door(Image5.PNG) on
+each floor of a building. The electricians install the Ethernet cabling from that wiring closet to 
+cubicles and conference rooms where devices might need to connect to the LAN. At the same time, most
+enterprises also support wireless LANs in the same space, to allow people to roam around(berkeliling) and still 
+work and to support a growing number of devices that do not have an Ethernet LAN interface.
+
+Image6.PNG shows a conceptual view of a typical enterprise LAN in a three-story building. Each floor has an 
+Ethernet LAN switch and a wireless LAN AP. To allow communication between floors, each per-floor switch 
+connects to one centralized distribution switch. For example, PC3 can send data to PC2, but it would first
+flow through switch SW3 to the first floor to the distribution switch (SWD) and then back up through switch SW2
+on the second floor.
+The figure also shows the typical way to connect a LAN to a WAN using a router. LAN switches and wireless access
+points work to create the LAN itself. Routers connect to both the LAN and the WAN.
+
+THE VARIETY OF ETHERNET PHYSICAL LAYER STANDARDS
+The term Ethernet refers to an entire family of standards. Some standards define the specifics of how to send data
+over a particular type of cabling, and at a particular speed(data-link layer). Other standards define protocols, 
+or rules, that the Ethernet nodes must follow to be a part of an Ethernet LAN(physical layer). All these Ethernet
+standards come from the IEEE and include the number 802.3 as the beginning part of the standard name.
+
+The most fundamental cabling choice has to do with the materials used inside the cable for the physical 
+transmission of bits: either copper wires or glass fibers. Devices using UTP cabling transmit data over electrical
+circuits via the copper wires inside the cable. Fiber-optic cabling, the more expensive alternative, allows Ethernet
+nodes to send light over glass fibers in the center of the cable. Although more expensive, optical cables typically
+allow longer cabling distances between nodes.
+
+a network engineer must know the names and features of the different Ethernet standards supported in Ethernet products.
+The IEEE also uses more meaningful shortcut names that identify the speed, as well as a clue about whether the cabling
+is UTP (with a suffix that includes T) or fiber (with a suffix that includes X). Table 2-2 lists a few Ethernet physical
+layer standards:
+
+    Speed           Common Name         Informal IEEE       Formal IEEE         Cable Type,
+                                        Standard Name       Standard Name       Maximum Length
+――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+    10 Mbps         Ethernet            10BASE-T            802.3 Copper,        100 m
+    100 Mbps        Fast Ethernet       100BASE-T           802.3u Copper,       100 m
+    1000 Mbps       Gigabit Ethernet    1000BASE-LX         802.3z Fiber,        5000 m
+    1000 Mbps       Gigabit Ethernet    1000BASE-T          802.3ab Copper,      100 m
+    10 Gbps         10 Gig Ethernet     10GBASE-T           802.3an Copper,      100 m
+
+CONSISTENT BEHAVIOR OVER ALL LINKS USING THE ETHERNET DATA-LINK LAYER
+Although Ethernet includes many physical layer standards, Ethernet acts like a single LAN technology because it uses the
+same data-link layer standard over all types of Ethernet physical links. No matter whether the data flows over a UTP cable
+or any kind of fiber cable, and no matter the speed, the data-link header and trailer use the same format.
+
+While the physical layer standards focus on sending bits over a cable, the Ethernet data-link protocols focus on sending an
+Ethernet frame from source to destination Ethernet node. From a data-link perspective, nodes build and forward frames. 
+Image7.PNG shows an example of the process. In this case, PC1 sends an Ethernet frame to PC3. The frame travels over a UTP
+link to Ethernet switch SW1, then over fiber links to Ethernet switches SW2 and SW3, and finally over another UTP link to PC3.
+Note that the bits actually travel at four different speeds in this example: 10 Mbps, 1 Gbps, 10 Gbps, and 100 Mbps, respectively.
+
+So, what is an Ethernet LAN? It is a combination of user devices, LAN switches, and different kinds of cabling. Each link can use
+different types of cables, at different speeds. However, they all work together to deliver Ethernet frames from the one device on
+the LAN to some other device.   
