@@ -1,0 +1,114 @@
+HOW IP ROUTING PROTOCOLS HELP IP ROUTING
+a network engineer could configure (type) all the required routes, on every router. However, if you
+enable the same routing protocol on all the routers in a TCP/IP internetwork, with the correct 
+settings, the routers will send routing protocol messages to each other. As a result, all the routers
+will learn routes for all the IP networks and subnets in the TCP/IP internetwork.
+
+IP supports a small number of different IP routing protocols. All use some similar ideas and processes
+to learn IP routes, but different routing protocols do have some internal differences; many routing
+protocols use the same general steps for learning routes:
+
+    Step 1. Each router, independent of the routing protocol, adds a route to its routing
+            table for each subnet directly connected to the router.
+    
+    Step 2. Each router’s routing protocol tells its neighbors about the routes in its routing
+            table, including the directly connected routes and routes learned from other
+            routers.
+    
+    Step 3. After learning a new route from a neighbor, the router’s routing protocol adds
+            a route to its IP routing table, with the next-hop router of that route typically
+            being the neighbor from which the route was learned.
+
+Also, note that at the final step, routers may have to choose between multiple routes to reach a single
+subnet. When that happens, routers place the best currently available route to reach a subnet (based on a
+measurement called a metric) into the routing table.
+
+Image13.PNG shows an example of how a routing protocol works, using the same diagram as in Image10.PNG and
+Image11.PNG. In this case, IP subnet 150.150.4.0, which consists of all addresses that begin with 150.150.4.0,
+sits on the Ethernet at the bottom of the figure. The figure shows the advertisement of routes for subnet 
+150.150.4.0 from bottom to top, as described in detail following the figure.
+
+Follow items A through F shown in the figure to see how each router learns its route to 150.150.4.0:
+    Step A. Subnet 150.150.4.0 exists as a subnet at the bottom of the figure, connected to
+            Router R3.
+    
+    Step B. R3 adds a connected route for 150.150.4.0 to its IP routing table; this happens
+            without help from the routing protocol.
+    
+    Step C. R3 sends a routing protocol message, called a routing update, to R2, causing
+            R2 to learn about subnet 150.150.4.0.
+    
+    Step D. R2 adds a route for subnet 150.150.4.0 to its routing table.
+    
+    Step E. R2 sends a similar routing update to R1, causing R1 to learn about subnet
+            150.150.4.0.
+    
+    Step F. R1 adds a route for subnet 150.150.4.0 to its routing table. The route lists R1’s
+            own Serial0 as the outgoing interface and R2 as the next-hop router IP address
+            (150.150.2.7).
+To get better understanding go to the last of the NOTE3.txt
+
+OTHER NETWORK LAYER FEATURES
+This last short section of the chapter introduces three other network layer features that should be helpful to you when
+reading through the rest of this book:
+
+    ■ Domain Name System (DNS)
+    ■ Address Resolution Protocol (ARP)
+    ■ Ping
+
+USING NAMES AND THE DOMAIN NAME SYSTEM
+Can you imagine a world in which every time you used an application, you had to refer to it by IP address? Instead of 
+using easy names like google.com or facebook.com, you would have to remember and type IP addresses, like 64.233.177.100.
+(At press time, 64.233.177.100 was an address used by Google, and you could reach Google’s website by typing that address
+in a browser.) Certainly, asking users to remember IP addresses would not be user friendly and could drive some people 
+away from using computers at all.
+
+TCP/IP defines a way to use hostnames to identify other computers. For example, when you open a web browser and type in the
+hostname www.google.com, your computer does not send an IP packet with destination IP address www.google.com; it sends an IP
+packet to an IP address used by the web server for Google.  TCP/IP needs a way to let a computer find the IP address used by
+the listed hostname, and that method uses the Domain Name System (DNS).
+
+Enterprises use the DNS process to resolve names into the matching IP address, as shown in the example in Image14.PNG. In 
+this case, PC11, on the left, needs to connect to a server named Server1. At some point, the user either types in the name
+Server1 or some application on PC11 refers to that server by name. At Step 1, PC11 sends a DNS message—a DNS query—to the DNS
+server. At Step 2, the DNS server sends back a DNS reply that lists Server1’s IP address. At Step 3, PC11 can now send an IP
+packet to destination address 10.1.2.3, the address used by Server1.
+
+DNS defines protocols, as well as standards for the text names used throughout the world, and a worldwide set of distributed
+DNS servers. The domain names that people use every day when web browsing, which look like www.example.com, follow the DNS 
+naming standards. Also, no single DNS server knows all the names and matching IP addresses, but the information is distributed
+across many DNS servers. So, the DNS servers of the world work together, forwarding queries to each other, until the server 
+that knows the answer supplies the desired IP address information.
+
+THE ADDRESS RESOLUTION PROTOCOL
+On Ethernet LANs, whenever a host or router needs to encapsulate an IP packet in a new Ethernet frame, the host or router knows
+all the important facts to build that header—except for the destination MAC address. The host knows the IP address of the next
+device, either another host IP address or the default router IP address. A router knows the IP route used for forwarding the IP
+packet, which lists the next router’s IP address. However, the hosts and routers do not know those neighboring devices’ MAC
+addresses beforehand.
+
+TCP/IP defines the Address Resolution Protocol (ARP) as the method by which any host or router on a LAN can dynamically learn 
+the MAC address of another IP host or router on the same LAN. ARP defines a protocol that includes the ARP Request, which is a
+message that makes the simple request “if this is your IP address, please reply with your MAC address.”ARP also defines the ARP
+Reply message, which indeed lists both the original IP address and the matching MAC address.
+
+Image15.PNG shows an example that uses the same router and host from the bottom part of the earlier Image13.PNG. The figure shows
+the ARP Request sent by router R3, on the left of the figure, as a LAN broadcast. All devices on the LAN will then process the
+received frame. On the right, at Step 2, host PC2 sends back an ARP Reply, identifying PC2’s MAC address. The text beside each 
+message shows the contents inside the ARP message itself, which lets PC2 learn R3’s IP address and matching MAC address, and R3 
+learn PC2’s IP address and matching MAC address.
+
+NOTE You can see the contents of the ARP cache on most PC operating systems by using the arp -a command from a command prompt
+
+ICMP ECHO AND THE PING COMMAND
+After you have implemented a TCP/IP internetwork, you need a way to test basic IP connectivity without relying on any applications
+to be working. The primary tool for testing basic network connectivity is the ping command.
+
+Ping (Packet Internet Groper) uses the Internet Control Message Protocol (ICMP), sending a message called an ICMP echo request to
+another IP address. The computer with that IP address should reply with an ICMP echo reply. If that works, you successfully have
+tested the IP network. In other words, you know that the network can deliver a packet from one host to the other and back. ICMP
+does not rely on any application, so it really just tests basic IP connectivity—Layers 1, 2, and 3 of the OSI model. Image16.PNG 
+outlines the basic process.
+
+Note that while the ping command uses ICMP, ICMP does much more. ICMP defines many messages that devices can use to help manage
+and control the IP network.

@@ -1,0 +1,100 @@
+HOW NETWORK LAYER ROUTING USES LANs and WANs
+While the network layer routing logic ignores the physical transmission details, the bits still have to be
+transmitted. To do that work, the network layer logic in a host or router must hand off the packet to the
+data-link layer protocols, which, in turn, ask the physical layer to actually send the data. The following
+list summarizes the major steps in a router’s internal network layer routing for each packet beginning with
+the a frame arriving in a router interface:
+
+    Step 1. Use the data-link Frame Check Sequence (FCS) field to ensure that the frame
+            had no errors; if errors occurred, discard the frame.
+
+    Step 2. Assuming that the frame was not discarded at Step 1, discard the old data-link
+            header and trailer, leaving the IP packet.
+
+    Step 3. Compare the IP packet’s destination IP address to the routing table, and find the
+            route that best matches the destination address. This route identifies the outgoing interface
+            of the router and possibly the next-hop router IP address.
+
+    Step 4. Encapsulate the IP packet inside a new data-link header and trailer, appropriate
+            for the outgoing interface, and forward the frame.
+
+Image11.PNG works through a repeat example of a packet sent by PC1 to PC2, followed by a detailed analysis of
+each device’s routing logic. The following list explains the forwarding logic at each router, focusing on how 
+the routing integrates with the data link:
+
+    Step A. PC1 sends the packet to its default router. PC1’s network layer logic builds
+            the IP packet, with a destination address of PC2’s IP address (150.150.4.10).
+            The network layer also performs the analysis to decide that 150.150.4.10 is not
+            in the local IP subnet, so PC1 needs to send the packet to R1 (PC1’s default
+            router). PC1 places the IP packet into an Ethernet data-link frame, with a 
+            destination Ethernet address of R1’s Ethernet address. PC1 sends the frame on to the
+            Ethernet.
+
+    Step B. R1 processes the incoming frame and forwards the packet to R2. Because
+            the incoming Ethernet frame has a destination MAC of R1’s Ethernet MAC, R1
+            decides to process the frame. R1 checks the frame’s FCS for errors, and if none,
+            R1 discards the Ethernet header and trailer. Next, R1 compares the packet’s
+            destination address (150.150.4.10) to its routing table and finds the entry for
+            subnet 150.150.4.0. Because the destination address of 150.150.4.10 is in that
+            subnet, R1 forwards the packet out the interface listed in that matching route
+            (Serial0) to next-hop Router R2 (150.150.2.7). R1 must first encapsulate the IP
+            packet into an HDLC frame.
+
+    Step C. R2 processes the incoming frame and forwards the packet to R3. R2
+            repeats the same general process as R1 when R2 receives the HDLC frame. R2
+            checks the FCS field and finds that no errors occurred and then discards the
+            HDLC header and trailer. Next, R2 compares the packet’s destination address
+            (150.150.4.10) to its routing table and finds the entry for subnet 150.150.4.0,
+            a route that directs R2 to send the packet out interface Fast Ethernet 0/0 to
+            next-hop router 150.150.3.1 (R3). But first, R2 must encapsulate the packet
+            in an Ethernet header. That header uses R2’s MAC address and R3’s MAC
+            address on the Ethernet WAN link as the source and destination MAC address,
+            respectively.
+    
+    Step D. R3 processes the incoming frame and forwards the packet to PC2. Like
+            R1 and R2, R3 checks the FCS, discards the old data-link header and trailer,
+            and matches its own route for subnet 150.150.4.0. R3’s routing table entry
+            for 150.150.4.0 shows that the outgoing interface is R3’s Ethernet interface,
+            but there is no next-hop router because R3 is connected directly to subnet
+            150.150.4.0. All R3 has to do is encapsulate the packet inside a new Ethernet
+            header and trailer, but with a destination Ethernet address of PC2’s MAC
+            address.
+
+Because the routers and PCs build new data-link headers and trailers, and because the new headers contain data-
+link addresses, the PCs and routers must have some way to decide what data-link addresses to use. An example of
+how the router determines which data-link address to use is the IP Address Resolution Protocol (ARP). ARP 
+dynamically learns the data-link address of an IP host connected to a LAN. For example, at the last step, at the
+bottom of Image11.PNG, Router R3 would use ARP once to learn PC2’s MAC address before sending any packets to PC2.
+
+HOW IP ADDRESSING HELPS IP ROUTING
+RULES FOR GROUPS OF IP ADDRESS (NETWORKs AND SUBNETs)
+TCP/IP groups IP addresses together so that IP addresses used on the same physical network are part of the same
+group. IP calls these address groups an IP network or an IP subnet. Using that same postal service analogy, each
+IP network and IP subnet works like a postal code (or in the United States, a ZIP code). All nearby postal 
+addresses are in the same postal code (ZIP code), while all nearby IP addresses must be in the same IP network or
+IP subnet.
+
+Numerically, the addresses in the same group have the same value in the first part of the addresses. For example, 
+Image10.PNG and 11.PNG could have used the following conventions:
+        ■ Hosts on the top Ethernet: Addresses start with 150.150.1
+        ■ Hosts on the R1–R2 serial link: Addresses start with 150.150.2
+        ■ Hosts on the R2–R3 EoMPLS link: Addresses start with 150.150.3
+        ■ Hosts on the bottom Ethernet: Addresses start with 150.150.4
+
+From the perspective of IP routing, the grouping of IP addresses means that the routing table can be much smaller.
+A router can list one routing table entry for each IP network or subnet, instead of one entry for every single IP address.
+the brief version of two of the foundational rules of subnetting can be summarized as follows:
+        ■ Two IP addresses, not separated from each other by a router, must be in the same group
+          (subnet).
+        ■ Two IP addresses, separated from each other by at least one router, must be in different
+          groups (subnets).
+
+It’s similar to the USPS ZIP code system and how it requires local governments to assign addresses to new buildings. It
+would be ridiculous to have two houses next door to each other, whose addresses had different postal/ZIP codes. Similarly,
+it would be silly to have people who live on opposite sides of the country to have addresses with the same postal/ZIP code.
+
+THE IP HEADER
+The routing process also makes use of the IPv4 header, as shown in Image12.PNG. be aware of the 20-byte IP header and the
+existence of the source and destination IP address fields. Note that in the examples so far in this chapter, while routers
+remove and add data-link headers each time it routes a packet, the IP header remains, with the IP addresses unchanged by the
+IP routing process. 

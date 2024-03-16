@@ -1,0 +1,114 @@
+HOW ROUTERS USE A WAN DATA LINK (Image5.PNG)
+Following the steps in the Image5.PNG, for a packet sent by PC1 to PC2’s IP address:
+    1. PC1’s network layer (IP) logic tells it to send the packet to a nearby router (R1).
+    2. Router R1’s network layer logic tells it to forward (route) the packet out the leased line
+       to Router R2 next.
+    3. Router R2’s network layer logic tells it to forward (route) the packet out the LAN link
+       to PC2 next.
+
+While Image5.PNG shows the network layer logic, the PCs and routers must rely on the LANs and WANs in the Image5
+to actually move the bits in the packet. Image6.PNG shows the same figure, with the same packet, but this time
+showing some of the data-link layer logic used by the hosts and routers. Basically, three separate data-link 
+layer steps encapsulate the packet, inside a data-link frame, over three hops through the internetwork: from PC1
+to R1, from R1 to R2, and from R2 to PC2.
+
+Following the steps in the Image6, again for a packet sent by PC1 to PC2’s IP address:
+    1. To send the IP packet to Router R1 next, PC1 encapsulates the IP packet in an Ethernet frame that has the 
+       destination MAC address of R1.
+    2. Router R1 de-encapsulates (removes) the IP packet from the Ethernet frame, encapsulates the packet into an HDLC
+       frame using an HDLC header and trailer, and forwards the HDLC frame to Router R2 next.
+    3. Router R2 de-encapsulates (removes) the IP packet from the HDLC frame, encapsulates the packet into an Ethernet
+       frame that has the destination MAC address of PC2, and forwards the Ethernet frame to PC2
+
+In summary, a leased line with HDLC creates a WAN link between two routers so that they can forward packets for the
+devices on the attached LANs. The leased line itself provides the physical means to transmit the bits, in both directions.
+The HDLC frames provide the means to encapsulate the network layer packet correctly so that it crosses the link between
+routers.
+
+ETHERNET AS A WAN TECHNOLOGY
+As time passed, the IEEE improved Ethernet standards in ways that made Ethernet a reasonable WAN technology. For example, 
+    the 1000BASE-LX standard uses single-mode fiber cabling, with support for a 5-km cable length; 
+    the 1000BASE-ZX standard uses single-mode supports an even longer 70-km cable length. 
+
+The model shown in Image7.PNG has many of the same ideas of how a telco creates a leased line, as shown earlier in 
+Image3.PNG, but now with Ethernet links and devices. The customer connects to an Ethernet link using a router interface.
+The (fiber) Ethernet link leaves the customer building and connects to some nearby SP(Service Provice) location called a
+point of presence (PoP). Instead of a telco switch as shown in Image3.PNG, the SP uses an Ethernet switch.
+
+NOTE For perspective about the broad world of the service provider network shown in Image7.PNG, look for more information 
+about the Cisco CCNA, CCNP Service Provider, and CCIE Service Provider certifications. See www.cisco.com/go/certifications 
+for more details.
+
+ETHERNET WANs THAT CREATE A LAYER 2 SERVICE (purposes for the CCNA)
+the most basic Ethernet WAN service, one that works much like an Ethernet crossover cable—just over a WAN. In other words:
+    ■ Logically, behaves like a point-to-point connection between two routers
+    ■ Physically, behaves as if a physical fiber Ethernet link existed between the two routers
+
+This book refers to this particular Ethernet WAN service with a couple of the common names:
+    Ethernet WAN: A generic name to differentiate it from an Ethernet LAN.
+
+    Ethernet Line Service (E-Line): A term from the Metro Ethernet Forum (MEF) for the kind of point-to-point Ethernet WAN 
+                                    service shown throughout this book.
+    Ethernet emulation: A term emphasizing that the link is not a literal Ethernet link from end to end.
+    Ethernet over MPLS (EoMPLS): A term that refers to Multiprotocol Label Switching(MPLS), a technology that can be used to
+                                 create the Ethernet service for the customer.
+
+So, if you can imagine two routers, with a single Ethernet link between the two routers, you understand what this particular
+EoMPLS service does, as shown in Image8.PNG. The two routers, R1 and R2, connect with an EoMPLS service instead of a serial link.
+Physically, each router actually connects to some SP PoP, as shown earlier in Image7.PNG, but logically, the two routers can send
+Ethernet frames to each other over the link.
+
+HOW ROUTERS ROUTE IP PACKETS USING ETHERNET EMULATION
+The EoMPLS link uses Ethernet for both Layer 1 and Layer 2 functions. That means the link uses the same familiar Ethernet header
+and trailer, as shown in the middle of Image9.PNG. Note that the figure shows a small cloud over the Ethernet link as a way to 
+tell us that the link is an Ethernet WAN link, rather than an Ethernet LAN link.
+
+NOTE The 802.3 headers/trailers in the figure are different at each stage! Make sure to notice the reasons in the step-by-step 
+explanations that follow.
+
+Steps 1 and 3 are unchanged:
+    1. To send the IP packet to Router R1 next, PC1 encapsulates the IP packet in an Ethernet frame that has the destination MAC 
+       address of R1.
+    2. Router R1 de-encapsulates (removes) the IP packet from the Ethernet frame and encapsulates the packet into a new Ethernet frame,
+       with a new Ethernet header and trailer. The destination MAC address is R2’s G0/0 MAC address, and the source MAC address is R1’s
+       G0/1 MAC address. R1 forwards this frame over the EoMPLS service to R2 next.
+    3. Router R2 de-encapsulates (removes) the IP packet from the Ethernet frame, encapsulates the packet into an Ethernet frame that has
+       the destination MAC address of PC2, and forwards the Ethernet frame to PC2.
+
+IP ROUTING
+Internet Protocol (IP) focuses on the job of routing data, in the form of IP packets, from the source host to the destination host. IP 
+does not concern itself with the physical transmission of data, instead relying on the lower TCP/IP layers to do the physical transmission
+of the data. Instead, IP concerns itself with the logical details, rather than physical details, of delivering data. In particular, the
+network layer specifies how packets travel end to end over a TCP/IP network, even when the packet crosses many different types of LAN and
+WAN links.
+
+NETWORK LAYER ROUTING(FORWARDING) LOGIC
+Routers and end-user computers (called hosts in a TCP/IP network) work together to perform IP routing. The host operating system (OS) has
+TCP/IP software, including the software that implements the network layer. Hosts use that software to choose where to send IP packets, often
+to a nearby router. Those routers make choices of where to send the IP packet next. Together, the hosts and routers deliver the IP packet to
+the correct destination, as shown in the example in Image10.PNG.
+
+HOST FORWARDING LOGIC: SEND THE PACKET TO DEFAULT ROUTER
+PC1 analyzes the destination address and realizes that PC2’s address (150.150.4.10) is not on the same LAN as PC1. So PC1’s logic tells it to
+send the packet to a device whose job it is to know where to route data: a nearby router, on the same LAN, called PC1’s default router
+(default gateway).
+
+To send the IP packet to the default router, the sender sends a data-link frame across the medium to the nearby router; this frame includes the
+packet in the data portion of the frame. That frame uses data-link layer (Layer 2) addressing in the data-link header to ensure that the nearby
+router receives the frame.
+
+R1 AND R2's LOGIC: ROUTING DATA ACCROSS THE NETWORK
+Each router keeps an IP routing table. This table lists IP address groupings, called IP networks and IP subnets. When a router receives a packet,
+it compares the packet’s destination IP address to the entries in the routing table and makes a match. This matching entry also lists directions
+that tell the router where to forward the packet next
+
+In Image10.PNG, R1 would have matched the destination address (150.150.4.10) to a routing table entry, which in turn told R1 to send the packet 
+to R2 next. Similarly, R2 would have matched a routing table entry that told R2 to send the packet, over an Ethernet WAN link, to R3 next.
+
+The routing concept works a little like driving down the freeway when approaching a big interchange. You look up and see signs for nearby towns,
+telling you which exits to take to go to each town. Similarly, the router looks at the IP routing table (the equivalent of the road signs) and
+directs each packet over the correct next LAN or WAN link (the equivalent of a road).
+
+R3's LOGIC: DELIVERING DATA TO THE END DESTINATION
+R3 needs to forward the packet directly to PC2, not to some other router. On the surface, that difference seems insignificant(sepele). In the
+next section, when you read about how the network layer uses LANs and WANs, the significance(pentingnya) of the difference will become obvious.

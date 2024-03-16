@@ -1,0 +1,97 @@
+However, to understand IP routing, you need to understand the basics of the two types of WAN
+links introduced in the first major section of this chapter: serial links and Ethernet WAN
+links. In their most basic form, these WAN links connect routers that sit at sites that can
+be miles to hundreds of miles apart, allowing communications between remote sites.
+
+WIDE-AREA NETWORKS
+Imagine a typical day at the branch office at some enterprise. The user sits at some endpoint
+device: a PC, tablet, phone, and so on. It connects to a LAN, either via an Ethernet cable or
+using a wireless LAN. However, the user happens to be checking information on a website, and
+that web server sits at the home office of the company. To make that work, the data travels
+over one or more wide-area network (WAN) links.
+
+WAN technologies define the physical (Layer 1) standards and data-link (Layer 2) protocols
+used to communicate long distances. This first section examines two such technologies:
+leased-line WANs and Ethernet WANs. 
+
+LEASED-LINE WANs
+To connect LANs using a WAN, the internetwork uses a router connected to each LAN, with a WAN 
+link between the routers. First, the enterprise’s network engineer would order some kind of WAN
+link. A router at each site connects to both the WAN link and the LAN, as shown in Image1.PNG.
+Note that a crooked line between the routers is the common way to represent a leased line when
+the drawing does not need to show any of the physical details of the line.
+
+PHYSICAL DETAILS OF LEASED LINES
+The leased line service delivers bits in both directions, at a predetermined speed, using fullduplex
+logic. In fact, conceptually it acts as if you had a full-duplex crossover Ethernet link between two
+routers, as shown in Image2.PNG. The leased line uses two pairs of wires, one pair for each direction
+of sending data, which allows full-duplex operation.
+
+To create such possibly long links, or circuits, a leased line does not actually exist as a single long
+cable between the two sites. Instead, the telephone company (telco) that creates the leased line 
+installs a large network of cables and specialized switching devices to create its own computer network.
+The telco network creates a service that acts like a crossover cable between two points, but the physical
+reality is hidden from the customer.
+
+the term leased line refers to the fact that the company using the leased line does not own the line but
+instead pays a monthly lease fee to use it. Table 3-2 lists some of the many names for leased lines, mainly
+so that in a networking job, you have a chance to translate from the terms each person uses with a basic
+description as to the meaning of the name.
+
+    Name                        Meaning or Reference
+―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+Leased circuit,             The words line and circuit are often used as synonyms in telco terminology;
+Circuit                     circuit makes reference to the electrical circuit between the two endpoints.
+
+Serial link,                The words link and line are also often used as synonyms. Serial in this case
+Serial line                 refers to the fact that the bits flow serially and that routers use serial interfaces.
+
+Point-to-point              These terms refer to the fact that the topology stretches between two
+link, Point-to-point line   points, and two points only. (Some older leased lines allowed more than two devices.)
+
+T1                          This specific type of leased line transmits data at 1.544 megabits per second (1.544 Mbps).
+
+WAN link, Link              Both of these terms are very general, with no reference to any specific technology.
+
+Private line                This term refers to the fact that the data sent over the line cannot be copied by other telco
+                            customers, so the data is private.
+
+Image3.PNG gives a little insight into the cabling that could exist inside the telco for a short leased line.
+Telcos put their equipment in buildings called central offices (CO). The telco installs cables from the CO to
+most every other building in the city, expecting to sell services to the people in those buildings one day. 
+The telco would then configure its switches to use some of the capacity on each cable to send data in both 
+directions, creating the equivalent of a crossover cable between the two routers.
+
+HDLC DATA-LINNK DETAILS OF LEASED-LINES
+A leased line provides a Layer 1 service. In other words, it promises to deliver bits between the devices connected
+to the leased line. However, the leased line itself does not define a data-link layer protocol to be used on the
+leased line.
+
+Because leased lines define only the Layer 1 transmission service, many companies and standards organizations have 
+created data-link protocols to control and use leased lines. Today, the two most popular data-link layer protocols
+used for leased lines between two routers are High-Level Data Link Control (HDLC) and Point-to-Point Protocol (PPP).
+
+HDLC has less work to do than Ethernet because of the simple point-to-point topology of a leased line. When one router
+sends an HDLC frame, the frame can go only one place: to the other end of the link. So, while HDLC has an address 
+field, the destination is implied, and the actual address is unimportant. All data-link protocols perform a similar 
+role: to control the correct delivery of data over a physical link of a particular type. For example, the Ethernet data
+-link protocol uses a destination address field to identify the correct device that should receive the data and an FCS
+field that allows the receiving device to determine whether the data arrived correctly. HDLC provides similar functions.
+
+        HDLC                Ethernet                    Description
+        Field               Equivalent
+        ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+        Flag                Preamble,       Lists a recognizable bit pattern so that the receiving nodes realize that
+                            SFD             a new frame is arriving.
+        Address             Destination     Identifies the destination device.
+                            Address
+        Control             N/A             Mostly used for purposes no longer in use today for links between
+                                            routers.
+        Type                Type            Identifies the type of Layer 3 packet encapsulated inside the frame.
+        FCS                 FCS             Identifies a field used by the error detection process. (It is the only
+                                            trailer field in this table.)
+
+HDLC exists today as a standard of the International Organization for Standardization (ISO), the same organization that
+brought us the OSI model. However, ISO standard HDLC does not have a Type field, and routers need to know the type of
+packet inside the frame. So, Cisco routers use a Cisco-proprietary variation of HDLC that adds a Type field, as shown in
+Image4.PNG.
