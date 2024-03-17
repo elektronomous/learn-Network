@@ -1,0 +1,26 @@
+> enable =>  which moves the user from user mode to enable mode (also known as privileged mode or privileged EXEC mode)
+    # disable => back to user mode
+    # reload => command, which tells the switch to reinitialize or reboot Cisco IOS, only from enable mode.
+    # show running-config => which lists the current configuration in the switch.
+    # copy running-config startup-config => overwrites the current startup-config file with what is currently in the running-configuration file.
+    # copy startup-config running-config => Enable mode EXEC command that merges the startup-config file with the currently active config file in RAM.
+    # write erase           => you can erase the startup-config file 
+    # erase startup-config  => you can erase the startup-config file 
+    # erase nvram:          => you can erase the startup-config file 
+    # exit => Moves back to the next higher mode in configuration mode.
+    # end => Exits configuration mode and goes back to enable mode from any of the configuration submodes.
+    # no debug all  => Enable mode EXEC command to disable all currently enabled debugs.
+    # undebug all   => Enable mode EXEC command to disable all currently enabled debugs.
+    
+    # configure terminal => enter the configuration terminal mode and make configuration for the current terminal you're working on
+      (config)# hostname your-hostname => set the switch's hostname to your-hostname
+      (config)# enable secret love => defines the password("love") that all users must use to reach enable mode.
+      (config)# line console 0 => enter the configuration for this console
+                (config-line)# login => tells IOS to perform simple password check (when you open the console, you ask to enter password).
+                (config-line)# password faith => set the password(faith) that you're asking when the console opening first.
+
+
+> show mac address-table dynamic => lists the table the switch uses to make forwarding decisions. A switch’s MAC address table basically
+                                    lists the data a switch uses to do its primary job.
+
+• The text inside parentheses in the command prompt identifies the configuration mode.

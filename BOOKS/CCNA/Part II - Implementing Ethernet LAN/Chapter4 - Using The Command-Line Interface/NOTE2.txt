@@ -1,0 +1,133 @@
+PASSWORD SECURITY FOR CLI ACCESS FROM THE CONSOLE
+by default, a switch allows console access only. By default, the console requires no password at all, and
+no password to reach enable mode for users that happened to connect from the console. The reason is that
+if you have access to the physical console port of the switch, you already have pretty much complete 
+control over the switch. You could literally get out your screwdriver and walk off with it, or you could
+unplug the power, or follow well-published procedures to go through password recovery to break into the CLI
+and then configure anything you want to configure.
+
+Simple passwords can be configured at two points in the login process from the console: when the user 
+connects from the console, and when any user moves to enable mode (using the enable EXEC command). 
+
+Image6.PNG shows the additional configuration commands that were configured prior to collecting the output
+in Image4.PNG. The output holds an excerpt(kutipan) from the EXEC command show running-config, which lists the 
+current configuration in the switch.
+
+Working from top to bottom, note that the first configuration command listed by the show running-config command
+sets the switch’s hostname to Certskills1. You might have noticed that the command prompts in Image4.PNG all 
+began with Certskills1, and that’s why the command prompt begins with the hostname of the switch.
+
+Next, note that the lines with a ! in them are comment lines, both in the text of this book and in the real
+switch CLI.
+
+The enable secret love configuration command defines the password that all users must use to reach enable mode.
+So, no matter whether users connect from the console, Telnet, or SSH, they would use the password love when
+prompted for a password after typing the enable EXEC command.
+
+Finally, the last three lines configure the console password. The first line (line console 0) is the command 
+that identifies the console, basically meaning “these next commands apply to the console only.” The login 
+command tells IOS to perform simple password checking (at the console). Remember, by default, the switch does
+not ask for a password for console users. Finally, the password faith command defines the password the console
+user must type when prompted.
+
+CLI HELP FEATURES
+Table 4-2 summarizes command-recall help options available at the CLI. Note that, in the first column, command
+represents any command. Likewise, parm represents a command’s parameter. For example, the second row lists
+command ?, which means that commands such as show ? and copy ? would list help for the show and copy commands,
+respectively.
+
+Table 4-2 Cisco IOS Software Command Help
+
+    What You Enter          What Help You Get
+    ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+    ?                       Provides help for all commands available in this mode.
+
+    command ?               With a space between the command and the ?, the switch lists text to
+                            describe all the first parameter options for the command.
+
+    com?                    Lists commands that start with com.
+
+    command parm?           Lists all parameters beginning with the parameter typed so far. (Notice
+                            that there is no space between parm and the ?.)
+
+    command                 Pressing the Tab key causes IOS to spell out the rest of the word,
+
+    parm<Tab>               assuming that you have typed enough of the word so there is only one
+                            option that begins with that string of characters.
+
+    command parm1 ?         If a space is inserted before the question mark, the CLI lists all the next
+                            parameters and gives a brief explanation of each.
+
+The information supplied by using help depends on the CLI mode. For example, when ? is entered in user mode, the
+commands allowed in user mode are displayed, but commands available only in enable mode (not in user mode) are
+not displayed. Also, help is available in configuration mode, which is the mode used to configure the switch. In
+fact, configuration mode has many different subconfiguration modes. So, you can get help for the commands 
+available in each configuration submode as well. 
+
+Cisco IOS stores the commands that you enter in a history buffer, storing ten commands by default. The CLI allows
+you to move backward and forward in the historical list of commands and then edit the command before reissuing it.
+These key sequences can help you use the CLI more quickly on the exams. Table 4-3 lists the commands used to
+manipulate previously entered commands.
+
+THE DEBUG AND SHOW COMMANDS
+The show command has a large variety of options, and with those options, you can find the status of almost every
+feature of Cisco IOS. Essentially, the show command lists the currently known facts about the switch’s operational
+status. The only work the switch does in reaction to show commands is to find the current status and list the
+information in messages sent to the user.
+
+The debug command also tells the user details about the operation of the switch. However, while the show command
+lists status information at one instant of time—more like a photograph—the debug command acts more like a live
+video camera feed. Once you issue a debug command, IOS remembers, issuing messages that any switch user can choose
+to see. The console sees these messages by default. Most of the commands used throughout this book to verify 
+operation of switches and routers are show commands.
+
+CONFIGURING(MEMBENTUK SUSUNAN) CISCO IOS SOFTWARE
+Configuration mode is another mode for the Cisco CLI, similar to user mode and privileged mode. However, not one 
+of the commands in user or privileged mode changes the switch’s configuration. Configuration mode accepts 
+configuration commands—commands that tell the switch the details of what to do and how to do it. Image7.PNG 
+illustrates the relationships among configuration mode, user EXEC mode, and privileged EXEC mode. 
+
+Commands entered in configuration mode update the active configuration file. These changes to the configuration 
+occur immediately each time you press the Enter key at the end of a command. Be careful when you enter a 
+configuration command!
+
+CONFIGURATION SUBMODES AND MODES 
+when using configuration mode, you move from the initial mode—global configuration mode(enter the configure terminal
+command)—into subcommand modes. Context-setting commands move you from one configuration subcommand mode, or context, to 
+another. These context-setting commands tell the switch the topic about which you will enter the next few configuration
+commands.
+
+For instance, the interface command is one of the most commonly used context-setting configuration commands. For example,
+the CLI user could enter interface configuration mode by entering the interface FastEthernet 0/1 configuration command.
+Asking for help in interface configuration mode displays only commands that are useful when configuring Ethernet interfaces.
+Commands used in this context are called subcommands—or, in this specific case, interface subcommands. For now, consider 
+Image8.PNG, which shows the following:
+    ■ Movement from enable mode to global configuration mode by using the configure
+    terminal EXEC command
+    ■ Using a hostname Fred global configuration command to configure the switch’s name
+    ■ Movement from global configuration mode to console line configuration mode (using the
+    line console 0 command)
+    ■ Setting the console’s simple password to hope (using the password hope line
+    subcommand)
+    ■ Movement from console configuration mode to interface configuration mode (using the
+    interface type number command)
+    ■ Setting the speed to 100 Mbps for interface Fa0/1 (using the speed 100 interface
+    subcommand)
+    ■ Movement from interface configuration mode back to global configuration mode (using
+    the exit command)
+
+Table 4-4 shows the most common command prompts in configuration mode, the names of
+those modes, and the context-setting commands used to reach those modes.
+
+Table 4-4 Common Switch Configuration Modes
+Prompt                  Name of Mode            Context-Setting Command(s) to Reach
+                                                This Mode
+―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+hostname(config)#       Global                  None—first mode after configure terminal
+hostname(config-line)#  Line                    line console 0
+                                                line vty 0 15
+hostname(config-if)#    Interface               interface type number
+hostname(vlan)#         VLAN                    vlan number
+
+For now, Image9.PNG shows most of the navigation between global configuration mode and the four configuration submodes listed
+in Table 4-4.

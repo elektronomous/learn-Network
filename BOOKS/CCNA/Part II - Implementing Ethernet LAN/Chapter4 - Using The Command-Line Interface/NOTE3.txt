@@ -1,0 +1,66 @@
+STORING SWITCH CONFIGURATION fields
+When you configure a switch, it needs to use the configuration. It also needs to be able to retain
+the configuration in case the switch loses power. The following list details the four main types of
+memory found in Cisco switches, as well as the most common use of each type(Image10.PNG):
+
+    ■ RAM: Sometimes called DRAM, for dynamic random-access memory, RAM is used
+           by the switch just as it is used by any other computer: for working storage. The running
+           (active) configuration file is stored here.
+
+    ■ Flash memory: Either a chip inside the switch or a removable memory card, flash memory stores
+                    fully functional Cisco IOS images and is the default location where the switch
+                    gets its Cisco IOS at boot time. Flash memory also can be used to store any other files,
+                    including backup copies of configuration files.
+    
+    ■ ROM: Read-only memory (ROM) stores a bootstrap (or boothelper) program that is loaded when the switch
+           first powers on. This bootstrap program then finds the full Cisco IOS
+           image and manages the process of loading Cisco IOS into RAM, at which point Cisco
+           IOS takes over operation of the switch.
+    
+    ■ NVRAM: Nonvolatile RAM (NVRAM) stores the initial or startup configuration file that
+             is used when the switch is first powered on and when the switch is reloaded.
+
+when the switch is on, the first software that's it's look up is the NVRAM, then the ROM, and the FLASH MEMORY.
+switches use multiple configuration files—one file for the initial configuration used when powering on, and
+another configuration file for the active, currently used running configuration as stored in RAM. Table 4-5 
+lists the names of these two files, their purpose, and their storage location.
+
+Table 4-5 Names and Purposes of the Two Main Cisco IOS Configuration Files
+Configuration           Purpose                                             Where It Is Stored
+Filename
+―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+startup-config          Stores the initial configuration used anytime the   NVRAM
+                        switch reloads Cisco IOS.
+
+running-config          Stores the currently used configuration commands.   RAM
+                        This file changes dynamically when someone enters
+                        commands in configuration mode.
+
+Essentially, when you use configuration mode, you change only the running-config file. This means that the 
+configuration example earlier in this chapter (Image8.PNG) updates only the running-config file. However, if
+the switch lost power right after that example, all that configuration would be lost. If you want to keep that
+configuration, you have to copy the running-config file into NVRAM, overwriting the old startup-config file.
+
+Image11.PNG demonstrates that commands used in configuration mode change only the running configuration in RAM.
+The example shows the following concepts and steps:
+
+    Step 1. The example begins with both the running and startup-config having the same
+            hostname, per the hostname hannah command.
+    Step 2. The hostname is changed in configuration mode using the hostname harold
+            command.
+    Step 3. The show running-config and show startup-config commands show the fact
+            that the hostnames are now different, with the hostname harold command
+            found only in the running-config.
+
+COPYING AND ERASING CONFIGURATION FILES
+In short, the EXEC command copy running-config startup-config backs up the running-config to the startup-config file.
+This command overwrites the current startup-config file with what is currently in the running-configuration file.
+you can erase the startup-config file using three
+different commands:
+    write erase
+    erase startup-config
+    erase nvram:
+
+Note that Cisco IOS does not have a command that erases the contents of the runningconfig file. To clear out the running
+-config file, simply erase the startup-config file, and then reload the switch, and the running-config will be empty at
+the end of the process.

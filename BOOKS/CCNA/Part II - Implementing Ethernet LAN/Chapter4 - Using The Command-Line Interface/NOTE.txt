@@ -1,0 +1,112 @@
+ACCESSING THE CISCO CATALYST SWITCH CLI
+The CLI is a text-based interface in which the user, typically a network engineer, enters a text
+command and presses Enter. Pressing Enter sends the command to the switch, which tells the device
+to do something. The switch does what the command says, and in some cases, the switch replies with
+some messages stating the results of the command.
+
+Cisco Catalyst switches also support other methods to both monitor and configure a switch. For 
+example, a switch can provide a web interface so that an engineer can open a web browser to connect
+to a web server running in the switch. Switches also can be controlled and operated using network 
+management software. This book discusses only Cisco Catalyst enterprise-class switches, and in 
+particular, how to use the Cisco CLI to monitor and control these switches. 
+
+CISCO CATALYST SWITCHES
+Cisco refers to a switch’s physical connectors as either interfaces or ports, with an interface type
+and interface number. The interface type, as used in commands on the switch, is either Ethernet, Fast
+Ethernet, Gigabit Ethernet, and so on for faster speeds. For Ethernet interfaces that support running
+at multiple speeds, the permanent name for the interface refers to the fastest supported speed. For
+example, a 10/100/1000 interface (that is, an interface that runs at 10 Mbps, 100 Mbps, or 1000 Mbps)
+would be called Gigabit Ethernet no matter what speed is currently in use.
+
+To uniquely number each different interface, some Catalyst switches use a two-digit interface number (x/y),
+while others have a three-digit number (x/y/z). For instance, two 10/100/1000 ports on many older Cisco
+Catalyst switches would be called GigabitEthernet 0/0 and GigabitEthernet 0/1, while on the newer 2960-XR
+series, two interfaces would be GigabitEthernet 1/0/1 and GigabitEthernet 1/0/2.
+
+ACCESSING THE CISCO IOS CLI
+Like any other piece of computer hardware, Cisco switches need some kind of operating system software. Cisco
+calls this OS the Internetwork Operating System (IOS).
+
+Cisco IOS Software for Catalyst switches implements and controls logic and functions performed by a Cisco 
+switch. Besides controlling the switch’s performance and behavior, Cisco IOS also defines an interface for
+humans called the CLI. The Cisco IOS CLI allows the user to use a terminal emulation program, which accepts
+text entered by the user. When the user presses Enter, the terminal emulator sends that text to the switch.
+The switch processes the text as if it is a command, does what the command says, and sends text back to the
+terminal emulator.
+
+The switch CLI can be accessed through three popular methods—the console, Telnet, and Secure Shell (SSH). 
+Two of these methods (Telnet and SSH) use the IP network in which the switch resides to reach the switch.
+The console is a physical port built specifically to allow access to the CLI. Image1.PNG depicts the options.
+
+CABLING THE CONSOLE CONNECTION
+Most PCs today use a familiar standard USB cable for the console connection. Cisco has been including USB ports
+as console ports in newer routers and switches as well. All you have to do is look at the switch to make sure
+you have the correct style of USB cable end to match the USB console port. In the simplest form, you can use any
+USB port on the PC, with a USB cable, connected to the USB console port on the switch or router, as shown on the
+far right side of Image2.PNG.
+
+Older console connections use a PC serial port that pre-dates USB, a UTP cable, and an RJ-45 console port on the
+switch, as shown on the left side of Image2.PNG. The PC serial port typically has a D-shell connector (roughly
+rectangular) with nine pins (often called a DB-9). The console port looks like any Ethernet RJ-45 port (but is 
+typically colored in blue and with the word console beside it on the switch).
+
+However, you can make your own cable with a standard serial cable (with a connector that matches the PC), a 
+standard RJ-45 to DB-9 converter plug, and a UTP cable. However, the UTP cable does not use the same pinouts as
+Ethernet; instead, the cable uses rollover cable pinouts rather than any of the standard Ethernet cabling pinouts.
+The rollover pinout uses eight wires, rolling the wire at pin 1 to pin 8, pin 2 to pin 7, pin 3 to pin 6, and so on.
+
+The 2960-XR series, for instance, supports both the older RJ-45 console port and a USB console port. Image3.PNG 
+points to the two console ports; you would use only one or the other. Note that the USB console port uses a mini-B 
+port rather than the more commonly seen rectangular standard USB Type A port.
+
+After the PC is physically connected to the console port, a terminal emulator(putty for example) software package 
+must be installed and configured on the PC. The terminal emulator software treats all data as text. It accepts the
+text typed by the user and sends it over the console connection to the switch. Similarly, any bits coming into the
+PC over the console connection are displayed as text for the user to read.
+
+The emulator must be configured to use the PC’s serial port to match the settings on the switch’s console port 
+settings. The default console port settings on a switch are as follows. Note that the last three parameters are
+referred to collectively as 8N1:
+    ■ 9600 bits/second
+    ■ No hardware flow control
+    ■ 8-bit ASCII
+    ■ No parity bits
+    ■ 1 stop bit
+
+ACCESSING THE CLI WITH TELNET AND SSH
+Telnet and SSH both allow the user to connect to another device’s CLI, but instead of connecting through a console 
+cable to the console port, the traffic flows over the same IP network that the networking devices are helping to 
+create.
+
+Telnet uses the concept of a Telnet client (the terminal application) and a Telnet server (the switch in this case).
+A Telnet client, the device that sits in front of the user, accepts keyboard input and sends those commands to the
+Telnet server. The Telnet server accepts the text, interprets the text as a command, and replies back.
+
+Using Telnet in a lab today makes sense, but Telnet poses a significant security risk in production networks. Telnet
+sends all data (including any username and password for login to the switch) as clear-text data. SSH gives us a much
+better option. you still open a terminal emulator, connect to the switch’s IP address, and see the switch CLI, no 
+matter whether you use Telnet or SSH. The differences exist behind the scenes: SSH encrypts the contents of all 
+messages, including the passwords, avoiding the possibility of someone capturing packets in the network and stealing
+the password to network devices.
+
+USER AND ENABLE (PRIVILEGED) MODES
+All three CLI access methods covered so far (console, Telnet, and SSH) place the user in an area of the CLI called
+user EXEC mode. User EXEC mode, sometimes also called user mode, allows the user to look around but not break anything.
+The “EXEC mode” part of the name refers to the fact that in this mode, when you enter a command, the switch executes
+the command and then displays messages that describe the command’s results.
+
+Cisco IOS supports a more powerful EXEC mode called enable mode (also known as privileged mode or privileged EXEC mode).
+Enable mode gets its name from the enable command, which moves the user from user mode to enable mode, as shown in 
+Image5.PNG. The other name for this mode, privileged mode, refers to the fact that powerful (or privileged) commands can
+be executed there. For example, you can use the reload command, which tells the switch to reinitialize or reboot Cisco 
+IOS, only from enable mode.
+
+NOTE If the command prompt lists the hostname followed by a >, the user is in user mode; if it is the hostname followed
+by the #, the user is in enable mode.
+
+Image4.PNG demonstrates the differences between user and enable modes. The example shows the output that you could see
+in a terminal emulator window, for instance, when connecting from the console. In this case, the user sits at the user
+mode prompt (“Certskills1>”) and tries the reload command. The reload command tells the switch to reinitialize or reboot
+Cisco IOS, so IOS allows this powerful command to be used only from enable mode. IOS rejects the reload command when used
+in user mode. Then the user moves to enable mode—also called privileged mode—(using the enable EXEC command). At that 
+point, IOS accepts the reload command now that the user is in enable mode.
