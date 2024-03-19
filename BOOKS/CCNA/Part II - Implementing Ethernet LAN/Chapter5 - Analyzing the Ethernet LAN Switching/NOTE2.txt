@@ -1,0 +1,56 @@
+AVOIDING LOOPS USING SPANNING TREE PROTOCOL
+To prevent looping frames, STP blocks some ports from forwarding frames so that only one active path
+exists between any pair of LAN segments. A simple example makes the need for STP more obvious. Remember,
+switches flood unknown unicast frames and broadcast frames. Image7.PNG shows an unknown unicast frame,
+sent by Larry to Bob, which loops forever because the network has redundancy(kelebihan) but no STP. Note
+that the figure shows one direction of the looping frame only, just to reduce clutter(kekacauan), but a
+copy of the frame would also loop the other direction. (Those switches have tables that aren't filled yet
+remember!!)
+
+redundancy = the state of being not or no longer needed or useful.
+
+The flooding of this frame would result in the frame repeatedly rotating around the three switches, 
+because none of the switches list Bob’s MAC address in their address tables—so each switch floods the frame.
+And while the flooding process is a good mechanism for forwarding unknown unicasts and broadcasts, the
+continual(terus menerus) flooding of traffic frames as in the figure can completely congest(menyumbat) the 
+LAN to the point of making it unusable.(redundancy)
+
+To avoid Layer 2 loops, all switches need to use STP. STP causes each interface on a switch to settle into
+either a blocking state or a forwarding state. Blocking means that the interface cannot forward or receive
+data frames, while forwarding means that the interface can send and receive data frames. If a correct subset
+of the interfaces is blocked, only a single currently active logical path exists between each pair of LANs.
+
+(I think the mechanism of this protocol would be like: "If a switch broadcast send an unknown unicast, then
+if it's get that same frame back from another switches, it should be block that port to that switch". )
+
+LAN SWITCHING SUMMARY
+In particular, switches make decisions to forward and filter frames, learn MAC addresses, and use STP to
+avoid loops, as follows:
+    Step 1. Switches forward frames based on the destination MAC address:
+        A. If the destination MAC address is a broadcast, multicast, or unknown destination unicast (a 
+           unicast not listed in the MAC table), the switch floods the frame.
+        B. If the destination MAC address is a known unicast address (a unicast
+           address found in the MAC table):
+                i. If the outgoing interface listed in the MAC address table is different
+                   from the interface in which the frame was received, the switch forwards
+                   the frame out the outgoing interface.
+                ii. If the outgoing interface is the same as the interface in which the frame
+                    was received, the switch filters the frame, meaning that the switch simply ignores the frame and does not forward it.
+    Step 2. Switches use the following logic to learn MAC address table entries:
+        A. For each received frame, examine the source MAC address and note the
+           interface from which the frame was received.
+        B. If it is not already in the table, add the MAC address and interface it was
+           learned on.
+    Step 3. Switches use STP to prevent loops by causing some interfaces to block, meaning that they do not send or receive frames.
+
+VERIFYING AND ANALYZING ETHERNET SWITCHING
+Cisco Catalyst switches come ready to get busy switching frames because of settings like
+these:
+    ■ The interfaces are enabled by default, ready to start working once a cable is connected.
+    ■ All interfaces are assigned to VLAN 1.
+    ■ 10/100 and 10/100/1000 interfaces use autonegotiation by default.
+    ■ The MAC learning, forwarding, flooding logic all works by default.
+    ■ STP is enabled by default.
+
+DEMONSTRATING MAC LEARNING
+You can use the COMMANDS.txt in chapter4 as references of your command in ask the switch to do some operation.

@@ -19,7 +19,7 @@
                 (config-line)# login => tells IOS to perform simple password check (when you open the console, you ask to enter password).
                 (config-line)# password faith => set the password(faith) that you're asking when the console opening first.
 
-
+> show mac address-table => To see a switch’s MAC address table, 
 > show mac address-table dynamic => lists the table the switch uses to make forwarding decisions. A switch’s MAC address table basically
                                     lists the data a switch uses to do its primary job.
 

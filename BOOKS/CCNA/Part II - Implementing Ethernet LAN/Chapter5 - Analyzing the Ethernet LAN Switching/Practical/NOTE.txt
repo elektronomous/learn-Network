@@ -1,0 +1,48 @@
+DEMONSTRATING MAC LEARNING
+= Open your packet tracer and open the Configuration1.pkt
+= Set each PC to use all of this MAC ADDRESS:
+  0200.1111.1111 = PC0
+  0200.2222.2222 = PC1
+  0200.3333.3333 = PC2
+  0200.4444.4444 = PC3
+= Set each PC to use all of this IP ADDRESS:
+  10.10.1.2 with subnet mask 255.255.255.0 = PC0
+  10.10.1.3 with subnet mask 255.255.255.0 = PC1
+  10.10.1.4 with subnet mask 255.255.255.0 = PC2
+  10.10.1.5 with subnet mask 255.255.255.0 = PC3
+  
+= Setting the switch to:
+    ■ Use the erase startup-config EXEC command to erase the startup-config file
+    ■ Use the delete vlan.dat EXEC command to delete the VLAN configuration details
+    ■ Use the reload EXEC command to reload the switch (thereby using the empty startupconfig, with no VLAN information configured)
+    ■ Configure the hostname SW1 command to set the switch hostname
+
+= Now try to ping from one pc to another, and then each time you ping using the command "show mac-address-table" to see CAM of the
+  switch (also you can use the command "show mac-address-table dynamic")
+
+Next, look at the Type field in the heading of the output table. The column tells us how the switch learned the MAC
+address as described earlier in this chapter; in this case, the switch learned all MAC addresses dynamically. You
+can also statically predefine MAC table entries using a couple of different features, including port security, and
+those would appear as Static in the Type column.
+
+Finally, the VLAN column of the output gives us a chance to briefly discuss how VLANs impact switching logic. LAN switches forward
+Ethernet frames inside a VLAN. What that means is if a frame enters via a port in VLAN 1, then the switch will forward or flood that
+frame out other ports in VLAN 1 only, and not out any ports that happen to be assigned to another VLAN. Chapter 8, “Implementing
+Ethernet Virtual LANs,” looks at all the details of how switches forward frames when using VLANs.
+
+= now on your switch, use command "show interfaces status" (for fast typing command "sh int st")
+
+As a reminder, Cisco Catalyst switches name their ports based on the fastest specification supported, so in this case, the switch
+has 24 interfaces named FastEthernet, and two named GigabitEthernet. Many commands abbreviate those terms, this time as Fa for
+FastEthernet and Gi for GigabitEthernet. (The example happens to come from a Cisco Catalyst switch that has 24 10/100 ports and two
+10/100/1000 ports.)
+
+The Status column, of course, tells us the status or state of the port. In this case, the lab switch had cables and devices connected
+to ports F0/1–F0/4 only, with no other cables connected. As a result, those first four ports have a state of connected, meaning that
+the ports have a cable and are functional. The notconnect state means that the port is not yet functioning. It may mean that there is
+no cable installed, but other problems may exist as well. (The section “Analyzing Switch Interface Status and Statistics,” in Chapter
+7, “Configuring and Verifying Switch Interfaces,” works through the details of what causes a switch interface to fail.)
+
+NOTE You can see the status for a single interface in a couple of ways. For instance, for F0/1, the command "show interfaces f0/1 
+status" lists the status in a single line of output as in your switch lab. The "show interfaces f0/1" command (without the status keyword)
+displays a detailed set of messages about the interface.

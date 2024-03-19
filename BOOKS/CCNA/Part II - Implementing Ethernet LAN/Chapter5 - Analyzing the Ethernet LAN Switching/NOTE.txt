@@ -1,0 +1,96 @@
+LAN SWITCHING CONCEPTS
+The first half of this chapter examines the logic: how a switch chooses to forward an Ethernet frame, when the
+switch chooses to not forward the frame, and so on.
+
+OVERVIEW OF SWITCHING LOGIC
+The LAN switch has one primary job: to forward frames to the correct destination (MAC) address. And to achieve
+that goal, switches use logic—logic based on the source and destination MAC address in each frame’s Ethernet 
+header.
+
+LAN switches receive Ethernet frames and then make a switching decision: either forward
+the frame out some other ports or ignore the frame. To accomplish this primary mission,
+switches perform three actions:
+    1. Deciding when to forward a frame or when to filter (not forward) a frame, based on
+       the destination MAC address
+    2. Preparing to forward frames by learning MAC addresses by examining the source
+       MAC address of each frame received by the switch
+    3. Preparing to forward only one copy of the frame to the destination by creating a
+       (Layer 2) loop-free environment with other switches by using Spanning Tree Protocol
+       (STP)
+
+NOTE The companion website includes a video that explains the basics of Ethernet switching.
+Image1.PNG shows one popular format for an Ethernet frame. Basically, a switch would take the frame shown in the
+figure, make a decision of where to forward the frame, and send the frame out that other interface.
+
+FORWARDING KNOWN UNICAST FRAMES
+To decide whether to forward a frame, a switch uses a dynamically built table that lists MAC addresses and 
+outgoing interfaces. Switches compare the frame’s destination MAC address to this table to decide whether the 
+switch should forward a frame or simply ignore it. For example, consider the simple network shown in Image2.PNG,
+with Fred sending a frame to Barney. 
+
+NOTE A switch’s MAC address table is also called the switching table, or bridging table, or even the Content-
+Addressable Memory (CAM) table, in reference to the type of physical memory used to store the table.
+
+The switch compares the destination MAC address (0200.2222.2222) to the MAC address table, matching the bold table
+entry. That matched table entry tells the switch to forward the frame out port F0/2, and only port F0/2.
+
+For example, Image3.PNG shows the first switching decision in a case in which Fred sends a frame to Wilma, with 
+destination MAC 0200.3333.3333. The topology has changed versus the previous figure, this time with two switches,
+and Fred and Wilma connected to two different switches. Image2.PNG shows the first switch’s logic, in reaction to
+Fred sending the original frame. Basically, the switch receives the frame in port F0/1, finds the destination MAC
+(0200.3333.3333) in the MAC address table, sees the outgoing port of G0/1, so SW1 forwards the frame out its G0/1
+port.
+
+That same frame next arrives at switch SW2, entering SW2’s G0/2 interface. As shown in Image4.PNG, SW2 uses the 
+same logic steps, but using SW2’s table. The MAC table lists the forwarding instructions for that switch only. In
+this case, switch SW2 forwards the frame out its F0/3 port, based on SW2’s MAC address table.
+
+NOTE The forwarding choice by a switch was formerly called a forward-versus-filter decision, because the switch 
+also chooses to not forward (to filter) frames, not sending the frame out some ports.
+
+The examples so far use switches that happen to have a MAC table with all the MAC addresses listed. As a result,
+the destination MAC address in the frame is known to the switch. The frames are called known unicast frames, or simply
+known unicasts, because the destination address is a unicast address, and the destination is known.
+
+LEARNING MAC ADDRESS
+each switch does its second main function: to learn the MAC addresses and interfaces(outgoing port) to put into its 
+address table. Switches build the address table by listening to incoming frames and examining the source MAC address in
+the frame. If a frame enters the switch and the source MAC address is not in the MAC address table, the switch creates
+an entry in the table. That table entry lists the interface(port) from which the frame arrived. Switch learning logic is
+that simple.
+
+Image5.PNG depicts the same single-switch topology network as Image4.PNG, but before the switch has built any address 
+table entries. The figure shows the first two frames sent in this network—first a frame from Fred, addressed to Barney,
+and then Barney’s response, addressed to Fred. The switch begins with an empty MAC table, as shown in the upperright 
+part of the figure. Then Fred sends his first frame (labeled “1”) to Barney, so the switch adds an entry for 
+0200.1111.1111, Fred’s MAC address, associated with interface F0/1. Why F0/1? The frame sent by Fred entered the switch’s
+F0/1 port. SW1’s logic runs something like this: “The source is MAC 0200.1111.1111, the frame entered F0/1, so from my
+perspective, 0200.1111.1111 must be reachable out my port F0/1.”
+
+Continuing the example, when Barney replies in Step 2, the switch adds a second entry, this one for 0200.2222.2222, 
+Barney’s MAC address, along with interface F0/2. Why F0/2? The frame Barney sent entered the switch’s F0/2 interface.
+Learning always occurs by looking at the source MAC address in the frame and adds the incoming interface as the associated
+port.
+
+FLOODING UNKNOWN UNICAST AND BROADCAST FRAMES
+Now again turn your attention to the forwarding process, using the topology in Image4.PNG. What do you suppose the switch
+does with Fred’s first frame, the one that occurred when there were no entries in the MAC address table? As it turns out,
+when there is no matching entry in the table, switches forward the frame out all interfaces (except the incoming interface)
+using a process called flooding. And the frame whose destination address is unknown to the switch is called an unknown 
+unicast frame, or simply an unknown unicast.
+
+(when a host sending a unknown unicast frame(frame with no destination address in the switch) in condition the switch's 
+table is empty, the switch has no clue to send the frame. So the switch flooding this kind of frame.)
+
+Switches flood unknown unicast frames. Flooding means that the switch forwards copies of the frame out all ports, except the
+port on which the frame was received. The idea is simple: if you do not know where to send it, send it everywhere, to deliver
+the frame. And, by the way, that device will likely then send a reply—and then the switch can learn that device’s MAC address
+and forward future frames out one port as a known unicast frame.
+
+Switches also flood LAN broadcast frames (frames destined to the Ethernet broadcast address of FFFF.FFFF.FFFF) because this
+process helps deliver a copy of the frame to all devices in the LAN.
+(I think the flood using this LAN broadcast to copy the unknown unicast frame so it can send it everywhere except the incoming
+ port of the unknown unicast frame)
+
+For example, Image6.PNG shows the same first frame sent by Fred, when the switch’s MAC table is empty. At step 1, Fred sends 
+the frame. At step 2, the switch sends a copy(LAN Broadcast) of the frame out all three of the other interfaces.
