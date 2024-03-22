@@ -11,7 +11,8 @@
     # end => Exits configuration mode and goes back to enable mode from any of the configuration submodes.
     # no debug all  => Enable mode EXEC command to disable all currently enabled debugs.
     # undebug all   => Enable mode EXEC command to disable all currently enabled debugs.
-    
+    # show interfaces f0/1 counters => One particular option, the counters option, lists statistics about incoming and outgoing frames on the interfaces.
+    # clear mac address table dynamic => 
     # configure terminal => enter the configuration terminal mode and make configuration for the current terminal you're working on
       (config)# hostname your-hostname => set the switch's hostname to your-hostname
       (config)# enable secret love => defines the password("love") that all users must use to reach enable mode.

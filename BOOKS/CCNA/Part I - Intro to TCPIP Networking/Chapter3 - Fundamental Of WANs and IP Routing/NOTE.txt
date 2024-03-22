@@ -1,0 +1,24 @@
+However, to understand IP routing, you need to understand the basics of the two types of WAN links
+introduced in the first major section of this chapter: serial links and Ethernet WAN links. these 
+WAN links connect routers that sit at sites that can be miles to hundreds of miles apart, allowing
+communications between remote sites.
+
+WIDE-AREA NETWORKS
+Imagine a typical day at the branch office at some enterprise. The user sits at some endpoint device:
+a PC, tablet, phone, and so on. It connects to a LAN, either via an Ethernet cable or using a wireless
+LAN. However, the user happens to be checking information on a website, and that web server sits at 
+the home office of the company. To make that work, the data travels over one or more wide-area network
+(WAN) links
+
+WAN technologies define the physical (Layer 1) standards and data-link (Layer 2) protocols used to 
+communicate long distances. This first section examines two such technologies: leased-line WANs and 
+Ethernet WANs. 
+
+LEASED-LINE WANs
+First, the enterprise’s network engineer would order some kind of WAN link. A router at each site 
+connects to both the WAN link and the LAN, as shown in Image1.PNG. Note that a crooked line between the
+routers is the common way to represent a leased line when the drawing does not need to show any of the
+physical details of the line.
+
+PHYSICAL DETAILS OF LEASED-LINE
+The leased line service delivers bits in both directions, at a predetermined speed, using fullduplex logic.

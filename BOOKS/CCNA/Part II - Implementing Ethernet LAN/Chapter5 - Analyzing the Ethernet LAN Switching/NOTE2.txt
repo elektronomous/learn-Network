@@ -53,4 +53,4 @@ these:
     ■ STP is enabled by default.
 
 DEMONSTRATING MAC LEARNING
-You can use the COMMANDS.txt in chapter4 as references of your command in ask the switch to do some operation.
+You can use the COMMANDS.txt in chapter4 as references of your command in ask the switch to do some operation. (GOTO practical folder)

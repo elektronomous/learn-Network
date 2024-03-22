@@ -46,3 +46,41 @@ no cable installed, but other problems may exist as well. (The section “Analyz
 NOTE You can see the status for a single interface in a couple of ways. For instance, for F0/1, the command "show interfaces f0/1 
 status" lists the status in a single line of output as in your switch lab. The "show interfaces f0/1" command (without the status keyword)
 displays a detailed set of messages about the interface.
+
+The show interfaces command has a large number of options. One particular option, the counters option, lists statistics about incoming and
+outgoing frames on the interfaces. (this command and the option is applied in real switch, if you use the packet tracer, this command is
+unavailable).In particular, it lists the number of unicast, multicast, and broadcast frames (both the in and out directions), and a total
+byte count for those frames.
+
+= on your switch, use command "show mac address-table dynamic address 0200.1111.1111" to find individual entries.
+
+how to troubleshoot the network? While this information is useful, often the engineer troubleshooting a problem does not know the MAC 
+addresses of the devices connected to the network. Instead, the engineer has a topology diagram, knowing which switch ports connect to other
+switches and which connect to endpoint devices.
+
+= on your switch, use command "show mac address-table dynamic interface fastEthernet 0/1" you might be troubleshooting while looking at a network topology diagram and
+  want to look at all the MAC addresses learned off a particular port.
+
+= on your switch, use command "show mac address-table dynamic vlan 1" => you may also want to find the MAC address table entries for one VLAN. You
+  guessed it—you can add the vlan parameter, followed by the VLAN number.
+
+First, for aging out MAC table entries, switches remove entries that have not been used for a defined number of seconds (default of 300 seconds on many switches). when
+switches learning MAC Address However, if that entry already exists, the switch still does something: it resets the inactivity timer back to 0 for that entry. Each 
+entry’s timer counts upward  over time to measure how long the entry has been in the table. The switch times out (removes) any entries whose timer reaches the defined
+aging time.
+
+= on your switch, use command "show mac address-table aging-time" to show the table of mac address's timer
+
+The aging time can be configured to a different time, globally and per-VLAN using the "mac address-table aging-time time-in-seconds [vlan vlan-number]" global 
+configuration command.  Each switch also removes the oldest table entries, even if they are younger than the aging time setting, if the table fills. When a switch tries
+to add a new MAC table entry and finds the table full, the switch times out (removes) the oldest table entry to make space.
+
+= on your switch, use command "show mac address-table count" list the size of a cisco catalyst MAC table 
+= on your switch, use command "clear mac address table dynamic" remove the dynamic entries from MAC address table
+
+The command also allows parameters to limit the types of entries cleared, as follows:
+  ■ By VLAN: clear mac address-table dynamic vlan vlan-number
+  ■ By Interface: clear mac address-table dynamic interface interface-id
+  ■ By MAC address: clear mac address-table dynamic address mac-address
+
+Now on practical2, learn how mac address learn in both of the switch.
