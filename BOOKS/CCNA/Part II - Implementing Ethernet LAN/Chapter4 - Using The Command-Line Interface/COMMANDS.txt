@@ -1,6 +1,9 @@
 > enable =>  which moves the user from user mode to enable mode (also known as privileged mode or privileged EXEC mode)
     # disable => back to user mode
     # reload => command, which tells the switch to reinitialize or reboot Cisco IOS, only from enable mode.
+    # show history => an EXEC command that lists the commands currently held in history buffer
+    # terminal history size x => from EXEC mode, this command allows a single user to set, just for this one login session
+                                 the size of the his or her buffer history.
     # show running-config => which lists the current configuration in the switch.
     # copy running-config startup-config => overwrites the current startup-config file with what is currently in the running-configuration file.
     # copy startup-config running-config => Enable mode EXEC command that merges the startup-config file with the currently active config file in RAM.
@@ -34,6 +37,7 @@
                                        the switch asks the user for a password
                 (config-line)# password faith => set the password(faith) that you're asking when the console opening first.
                 (config-line)# no password => delete the password that has been set on this line configuration
+                (config-line)# history size x => sets the default number of commands saved in the history buffer for the users of the console
       (config)# line vty 0 15 =>  vty line configuration mode for the Telnet 
                 (config-vty)# exec-timeout minutes seconds => set the timeout for the login session into this telnet/SSH
                 (config-vty)# login local => Tell IOS to enable the username and password login to this line
@@ -45,6 +49,7 @@
                 (config-vty)# transport input telnet = allow only telnet
                 (config-vty)# transport input none => disallow both of them
                 (config-vty)# transport input all => allow both of them
+                (config-vty)# history size x => sets the default number of commands saved in the history buffer for the users of the vty line
       (config)# interface Fa0/1 => configure the interface Fa0/1
       (config)# interface vlan 1 => configure the interface of vlan 1
       (config)# interface name number => configure the interfaces name numbers
