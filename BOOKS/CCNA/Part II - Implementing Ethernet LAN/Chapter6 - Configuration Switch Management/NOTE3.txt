@@ -1,0 +1,65 @@
+CONFIGURING IPV4 ON A SWITCH(Image12.PNG)
+following steps list the commands used to configure IPv4 on a switch, assuming that the IP
+address is configured to be in VLAN 1:
+    Step 1. Use the "interface vlan 1" command in global configuration mode to enter interface VLAN 1 configuration mode.
+    Step 2. Use the "ip address ip-address mask" command in interface configuration mode to assign an IP address and mask.
+    Step 3. Use the "no shutdown" command in interface configuration mode to enable the VLAN 1 interface if it is not 
+            already enabled.
+    Step 4. Add the "ip default-gateway ip-address" command in global configuration mode to configure the default gateway.
+    Step 5. (Optional) Add the "ip name-server ip-address1 ip-address2 …" command in global configuration mode to configure
+            the switch to use Domain Name System (DNS) to resolve names into their matching IP address.
+
+the [no] shutdown command. To administratively enable an interface on a switch, use the no shutdown interface subcommand; 
+to disable an interface, use the shutdown interface subcommand. This command can be used on the physical Ethernet interfaces
+that the switch uses to switch Ethernet messages in addition to the VLAN interface shown here in this example.
+
+CONFIGURING A SWITCH TO LEARN ITS IP ADDRESS WITH DHCP
+The switch can also use Dynamic Host Configuration Protocol (DHCP) to dynamically learn its IPv4 settings. Basically, all you
+have to do is tell the switch to use DHCP on the interface(on VLAN where your put your IP Management) and enable the interface.
+Assuming that DHCP works in this network, the switch will learn all its settings:
+    Step 1. Enter VLAN 1 configuration mode using the "interface vlan 1" global configuration command, and enable the interface 
+            using the "no shutdown" command as necessary.
+    Step 2. Assign an IP address and mask using the "ip address dhcp" interface subcommand.
+
+VERIFYING IPV4 ON A SWITCH
+The switch IPv4 configuration can be checked in several places. 
+    First, you can always look at the current configuration using the "show running-config" command.
+    Second, you can look at the IP address and mask information using the "show interfaces vlan x" command, which shows detailed 
+            status information about the VLAN interface in VLAN x. 
+            The output of the "show interfaces vlan 1" command lists two very important details related
+            to switch IP addressing. First, this show command lists the interface status of the VLAN 1
+            interface—in this case, “up and up.” If the VLAN 1 interface is not up, the switch cannot use
+            its IP address to send and receive management traffic. Notably, if you forget to issue the "no
+            shutdown" command, the VLAN 1 interface remains in its default shutdown state and is listed
+            as “administratively down” in the show command output
+
+    Finally, if using DHCP, use the "show dhcp lease" command to see the (temporarily) leased IP address and other parameters. 
+        Second, note that the output lists the interface’s IP address on the third line. If you statically
+        configure the IP address, the IP address will always be listed; however, if you use DHCP and DHCP fails,
+        the show interfaces vlan x command will not list an IP address here. When DHCP works, you can see the IP
+        address with the "show interfaces vlan 1" command, but that output does not remind you whether the address is
+        either statically configured or DHCP leased. So it does take a little extra effort to make sure you know
+        whether the address is statically configured or DHCP-learned on the VLAN interface.
+    (Note that the switch does not store the DHCP-learned IP configuration in running-config file)
+
+THE LOGGING SYNCHRONOUS, EXEC-TIMEOUT, AND NO IP DOMAIN-LOOKUP COMMANDS
+they can be useful settings to reduce your frustration when using the console of a switch or router. IOS (by default) displays 
+these syslog messages on the console’s screen at any time—including right in the middle of a command you are entering, or in the
+middle of the output of a show command. Having a bunch of text show up unexpectedly can be a bit annoying.
+
+You could simply disable the feature that sends these messages to the console and then reenable the feature later using the "no 
+logging console" and "logging console" global configuration commands. IOS supplies a reasonable compromise, telling the switch to
+display syslog messages only at more convenient times, such as at the end of output from a show command. To do so, just configure
+the "logging synchronous" console line subcommand, which basically tells IOS to synchronize the syslog message display with the 
+messages requested using show commands.
+
+Another way to improve the user experience at the console is to control timeouts of the login session from the console or when 
+using Telnet or SSH. By default, the switch automatically disconnects console and vty (Telnet and SSH) users after 5 minutes of 
+inactivity. The "exec-timeout minutes seconds" line subcommand enables you to set the length of that inactivity timer. In the lab
+(but not in production), you might want to use the special value of 0 minutes and 0 seconds meaning “never time out.”
+
+Finally, IOS has an interesting combination of features that can make you wait for a minute or so when you mistype a command. 
+First, IOS tries to use DNS name resolution on IP hostnames—a generally useful feature. If you mistype a command, however, IOS
+thinks you want to telnet to a host by that name. With all default settings in the switch, the switch tries to resolve the hostname,
+cannot find a DNS server, and takes about a minute to time out and give you control of the CLI again. To avoid this problem, 
+configure the "no ip domain-lookup" global configuration command, which disables IOS’s attempt to resolve the hostname into an IP address.

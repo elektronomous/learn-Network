@@ -12,13 +12,46 @@
     # no debug all  => Enable mode EXEC command to disable all currently enabled debugs.
     # undebug all   => Enable mode EXEC command to disable all currently enabled debugs.
     # show interfaces f0/1 counters => One particular option, the counters option, lists statistics about incoming and outgoing frames on the interfaces.
+    # show dhcp lease => show the if the interface VLAN IP Management using dhcp
+    # show interfaces VLAN 1 => show the VLAN 1
+    # show ip default-gateway => show the default-gateway of the switch 
     # clear mac address table dynamic => 
     # configure terminal => enter the configuration terminal mode and make configuration for the current terminal you're working on
+      (config)# no ip domain-lookup => disable the devices features that's when you misstype, they're trying to find the word by using DNS.
+      (config)# logging console => enable the log messages after configuration's done
+      (config)# no logging console => disable the log messages
       (config)# hostname your-hostname => set the switch's hostname to your-hostname
       (config)# enable secret love => defines the password("love") that all users must use to reach enable mode.
+      (config)# ip ssh version 2 => override the default of supporting both versions 1 and 2, so that only SSHv2 connections are allowed.
+      (config)# ip domain-name name => configure domain name for the switch (the purpose of configure the SSH)
+      (config)# crypto generate key rsa => to generate the keys. (Use at least a 768-bit key to support SSH version 2.)
+      (config)# crypto generate key rsa modules 1024 => to generate the keys. (Use at least a 768-bit key to support SSH version 2.)
+      (config)# username faza password akbar => set username("faza") and password("akbar") for login to the CLI
       (config)# line console 0 => enter the configuration for this console
-                (config-line)# login => tells IOS to perform simple password check (when you open the console, you ask to enter password).
+                (config-line)# exec-timeout minutes seconds => set the timeout for the login session into this console
+                (config-line)# login local => tells IOS to enable the username and password login to this line
+                (config-line)# login => Tells IOS to enable the use of a simple shared password (with no username) on this line (console), so that
+                                       the switch asks the user for a password
                 (config-line)# password faith => set the password(faith) that you're asking when the console opening first.
+                (config-line)# no password => delete the password that has been set on this line configuration
+      (config)# line vty 0 15 =>  vty line configuration mode for the Telnet 
+                (config-vty)# exec-timeout minutes seconds => set the timeout for the login session into this telnet/SSH
+                (config-vty)# login local => Tell IOS to enable the username and password login to this line
+                (config-vty)# login => Tells IOS to enable the use of a simple shared password (with no username) on this line (vty), so that
+                                       the switch asks the user for a password
+                (config-vty)# password hope => set the password(hope) that you're asking when you open the terminal via telnet
+                (config-vty)# no password => delete the password that has been set in this vty configuration
+                (config-vty)# transport input ssh => allow only ssh
+                (config-vty)# transport input telnet = allow only telnet
+                (config-vty)# transport input none => disallow both of them
+                (config-vty)# transport input all => allow both of them
+      (config)# interface Fa0/1 => configure the interface Fa0/1
+      (config)# interface vlan 1 => configure the interface of vlan 1
+      (config)# interface name number => configure the interfaces name numbers
+                          (config-if)# ip address dhcp => make the interface to get the ip address by learn from DHCP
+                          (config-if)# ip address ip_address mask => set the ip address(10.10.1.2) and the mask (255.255.255.0)
+                          (config-if)# no shutdown => enable the interface if the interface is shutdown
+                          (config-if)# shutdown => disable the interface
 
 > show mac address-table => To see a switch’s MAC address table, 
 > show mac address-table dynamic => lists the table the switch uses to make forwarding decisions. A switch’s MAC address table basically

@@ -1,0 +1,123 @@
+SECURING USER MODE ACCESS WITH EXTERNAL AUTHENTICATION SERVERS
+Cisco switches allow exactly that option using an external server called an authentication, authorization, and
+accounting (AAA) server. These servers hold the usernames/passwords. Typically, these servers allow users to do
+self-service and forced maintenance to their passwords. Many production networks use AAA servers for their 
+switches and routers today.
+
+When using a AAA server for authentication, the switch (or router) simply sends a message to the AAA server 
+asking whether the username and password are allowed, and the AAA server replies. Image6.PNG shows an example,
+with the user first supplying a username/password, the switch asking the AAA server, and the server replying to
+the switch stating that the username/password is valid.
+
+While the figure shows the general idea, note that the information flows with a couple of different protocols. On
+the left, the connection between the user and the switch or router uses Telnet or SSH. On the right, the switch 
+and AAA server typically use either the RADIUS or TACACS+ protocol, both of which encrypt the passwords as they 
+traverse the network.
+
+SECURING REMOTE ACCESS WITH SECURE SHELL
+Telnet has one serious disadvantage: all data in the Telnet session flows as clear text, including the password 
+exchanges. So, anyone that can capture the messages between the user and the switch (in what is called a man-in-the
+-middle attack) can see the passwords. SSH encrypts all data transmitted between the SSH client and server, 
+protecting the data and passwords.
+
+SSH cannot rely on authentication methods that do not include a username, like shared passwords. Image7.PNG shows 
+three additional commands required to complete the configuration of SSH on the switch. IOS uses the three SSH-specific
+configuration commands in the figure to create the SSH encryption keys. The SSH server uses the fully qualified domain
+name (FQDN) of the switch as input to create that key. The switch creates the FQDN from the hostname and domain name 
+of the switch. Image7.PNG begins by setting both values (just in case they are not already configured). Then the third
+command, the "crypto key generate rsa" command, generates the SSH encryption keys. 
+
+IOS runs an SSH server by default. In addition, IOS allows SSH connections into the vty lines by default. you can see
+how to setting the device to use the SSH in CLI (Image8_1.PNG and Image8_2.PNG). Earlier, I mentioned that one useful
+default was that the switch defaults to support both SSH and Telnet on the vty lines. However, because Telnet is a 
+security risk, you could disable Telnet to enforce a tighter security policy. (For that matter, you can disable SSH
+support and allow Telnet on the vty lines as well.)
+
+To control which protocols a switch supports on its vty lines, use the transport input {all | none | telnet | ssh} vty
+subcommand in vty mode, with the following options:
+    transport input all or transport input telnet ssh: Support both Telnet and SSH
+    transport input none: Support neither
+    transport input telnet: Support only Telnet
+    transport input ssh: Support only SSH
+
+To complete this section about SSH, the following configuration checklist details the steps for one method to configure
+a Cisco switch to support SSH using local usernames. (SSH support in IOS can be configured in several ways; this 
+checklist shows one simple way to configure it.):
+
+    Step 1. Configure the switch to generate a matched public and private key pair to use
+            for encryption:
+                A. If not already configured, use the hostname name in global configuration
+                mode to configure a hostname for this switch.
+                B. If not already configured, use the "ip domain-name name" in global configuration mode to configure a domain name
+                   for the switch, completing the switch’s FQDN.
+                C. Use the "crypto key generate rsa" command in global configuration mode (or the "crypto key generate rsa modulus 
+                   modulus-value" command to avoid being prompted for the key modulus) to generate the keys. (Use at least a 768-bit
+                   key to support SSH version 2.)
+
+    Step 2. (Optional) Use the "ip ssh version 2" command in global configuration mode to
+            override the default of supporting both versions 1 and 2, so that only SSHv2
+            connections are allowed.
+    Step 3. (Optional) If not already configured with the setting you want, configure the
+            vty lines to accept SSH and whether to also allow Telnet:
+                A. Use the "transport input ssh" command in vty line configuration mode to
+                   allow SSH only.
+                B. Use the "transport input all" command (default) or "transport input telnet ssh"
+                   command in vty line configuration mode to allow both SSH and Telnet.
+    Step 4. Use various commands in vty line configuration mode to configure local username login authentication as discussed earlier
+             in this chapter.
+
+NOTE Cisco routers often default to transport input none, so you must add the transport input line subcommand to enable Telnet and/or
+SSH into a router.
+
+the "show ip ssh" command lists status information about the SSH server itself. The "show ssh" command then lists information about
+each SSH client currently connected into the switch.
+
+ENABLING IPV4 FOR REMOTE ACCESS
+To allow Telnet or SSH access to the switch, and to allow other IP-based management protocols (for example, Simple Network Management
+Protocol, or SNMP) to function as intended, the switch needs an IP address, as well as a few other related settings. the IP address has
+nothing to do with how switches forward ethernet frames; it simply exists to support overhead management traffic.
+
+HOST AND SWITCH IP SETTINGS
+A switch needs the same kind of IP settings as a PC with a single Ethernet interface. For perspective, a PC has a CPU, with the 
+operating system running on the CPU. It has an Ethernet network interface card (NIC). The OS configuration includes an IP address 
+associated with the NIC, either configured or learned dynamically with DHCP.
+
+A switch uses the same ideas, except that the switch needs to use a virtual NIC inside the switch. Like a PC, a switch has a real CPU,
+running an OS (called IOS). The switch obviously has lots of Ethernet ports, but instead of assigning its management IP address to any
+of those ports, the switch then uses a NIC-like concept called a switched virtual interface (SVI), or more commonly, a VLAN interface,
+that acts like the switch’s own NIC. Then the settings on the switch look something like a host, with the switch configuration assigning
+IP settings, like an IP address, to this VLAN interface, as shown in Image9.PNG.
+
+By using interface VLAN 1 for the IP configuration, the switch can then send and receive frames on any of the ports in VLAN 1. In a Cisco
+switch, by default, all ports are assigned to VLAN 1. A Layer 2 Cisco LAN switch needs only one IP address for management purposes. However,
+you can choose to use any VLAN to which the switch connects. The configuration then includes a VLAN interface for that VLAN number, with an
+appropriate IP address.
+
+For example, Image10.PNG shows a Layer 2 switch with some physical ports in two different VLANs (VLANs 1 and 2). The figure also shows the
+subnets used on those VLANs. The network engineer could choose to use either
+    ■ Interface VLAN 1, with an IP address in subnet 192.168.1.0
+    ■ Interface VLAN 2, with an IP address in subnet 192.168.2.0
+
+Note that you should not try to use a VLAN interface for which there are no physical ports assigned to the same VLAN. If you do, the VLAN
+interface will not reach an up/up state, and the switch will not have the physical ability to communicate outside the switch.
+(it probably means that VLAN could be exist, but there are no physical ports are assigned to it).
+
+NOTE Some Cisco switches can be configured to act as either a Layer 2 switch or a Layer 3 switch. When acting as a Layer 2 switch, a switch
+forwards Ethernet frames as discussed in depth in Chapter 5, “Analyzing Ethernet LAN Switching.” Alternatively, a switch can also act as a
+multilayer switch or Layer 3 switch, which means the switch can do both Layer 2 switching and Layer 3 IP routing of IP packets, using the
+Layer 3 logic normally used by routers. This chapter assumes all switches are Layer 2 switches. 
+
+(Say that you have problem on your computer pinging a website that's hosted outside your local network. now you want to make sure that the
+ switch doesn't cause that problem by pinging the website via your switch. to make contact to the outside network, your switch need to be
+ configured. )
+the switch cannot communicate outside the local subnet without another configuration setting called the default gateway. The reason a switch
+needs a default gateway setting is the same reason that hosts need the same setting—because of how hosts think when sending IP packets. 
+Specifically:
+    ■ To send IP packets to hosts in the same subnet, send them directly
+    ■ To send IP packets to hosts in a different subnet, send them to the local router; that is, the default gateway
+
+Image11.PNG shows the ideas. In this case, the switch (on the right) will use IP address 192.168.1.200 as configured on interface VLAN 1.
+However, to communicate with host A, on the far left of the figure, the switch must use Router R1 (the default gateway) to forward IP 
+packets to host A. To make that work, the switch needs to configure a default gateway setting, pointing to Router R1’s IP address 
+(192.168.1.1 in this case). Note that the switch and router both use the same mask, 255.255.255.0, which puts the addresses in the same
+subnet.
