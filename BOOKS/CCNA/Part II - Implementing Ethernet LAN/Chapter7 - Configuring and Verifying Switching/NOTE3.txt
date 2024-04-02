@@ -1,0 +1,49 @@
+COMMON LAYER 1 PROBLEMS ON WORKING INTERFACES
+When the interface reaches the connect (up/up) state, the switch considers the interface to be working. The switch, of course,
+tries to use the interface, and at the same time, the switch keeps various interface counters. These interface counters can 
+help identify problems that can occur even though the interface is in a connect state, like issues related to the duplex 
+mismatch problem that was just described. This section explains some of the related concepts and a few of the most common
+problems.
+
+Whenever the physical transmission has problems, the receiving device might receive a frame whose bits have changed values.
+These frames do not pass the error detection logic as implemented in the FCS field in the Ethernet trailer, as covered in
+Chapter 2. The receiving device discards the frame and counts it as some kind of input error. Cisco switches list this error
+as a CRC error, as highlighted in Image10.PNG. (Cyclic redundancy check [CRC] is a term related to how the frame check sequence
+[FCS] math detects an error.)
+
+The example highlights several of the counters as examples so that you can start to understand which ones point to problems and
+which ones are just counting normal events that are not problems. The following list shows a short description of each 
+highlighted counter, in the order shown in the example:
+    Runts: Frames that did not meet the minimum frame size requirement (64 bytes, including
+           the 18-byte destination MAC, source MAC, type, and FCS). Can be caused by collisions.
+    Giants: Frames that exceed the maximum frame size requirement (1518 bytes, including
+            the 18-byte destination MAC, source MAC, type, and FCS).
+    Input Errors: A total of many counters, including runts, giants, no buffer, CRC, frame,
+                  overrun, and ignored counts.
+    CRC: Received frames that did not pass the FCS math; can be caused by collisions.
+    Frame: Received frames that have an illegal format, for example, ending with a partial
+           byte; can be caused by collisions.
+    Packets Output: Total number of packets (frames) forwarded out the interface.
+    Output Errors: Total number of packets (frames) that the switch port tried to transmit,
+                   but for which some problem occurred.
+    Collisions: Counter of all collisions that occur when the interface is transmitting a frame.
+    Late Collisions: The subset of all collisions that happen after the 64th byte of the frame
+                     has been transmitted. (In a properly working Ethernet LAN, collisions should occur within
+                     the first 64 bytes; late collisions today often point to a duplex mismatch.)
+
+Note that many of these counters occur as part of the CSMA/CD process used when half duplex is enabled. Collisions occur as a
+normal part of the half-duplex logic imposed by CSMA/CD, so a switch interface with an increasing collisions counter might not
+even have a problem. However, one problem, called late collisions, points to the classic duplex mismatch problem.
+
+If a LAN design follows cabling guidelines, all collisions should occur by the end of the 64th byte of any frame. When a switch
+has already sent 64 bytes of a frame, and the switch receives a frame on that same interface, the switch senses a collision. In
+this case, the collision is a late collision, and the switch increments the late collision counter in addition to the usual 
+CSMA/CD actions to send a jam signal, wait a random time, and try again.
+
+With a duplex mismatch, like the mismatch between SW1 and SW2 in Image8.PNG, the halfduplex interface will likely see the late
+collisions counter increment. Why? The half-duplex interface sends a frame (SW1), but the full-duplex neighbor (SW2) sends at any
+time, even after the 64th byte of the frame sent by the half-duplex switch. So, just keep repeating the show interfaces command, 
+and if you see the late collisions counter incrementing on a halfduplex interface, you might have a duplex mismatch problem.
+
+In particular, if the CRC errors grow, but the collisions counters do not, the problem might simply be interference on the cable. (The
+switch counts each collided frame as one form of input error as well.)

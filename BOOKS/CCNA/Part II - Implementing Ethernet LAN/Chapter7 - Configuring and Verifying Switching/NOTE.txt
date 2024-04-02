@@ -1,0 +1,104 @@
+The first section shows how you can configure and change the operation of switch interfaces: how to change the speed,
+duplex, or even disable the interface. The second half then focuses on how to use show commands on a switch to verify
+switch interface status and how to interpret the output to find some of the more common issues with switch interfaces.
+
+CONFIGURING SWITCH INTERFACES 
+IOS uses the term interface to refer to physical ports used to forward data to and from other devices. Each interface
+can be configured with several settings, each of which might differ from interface to interface. Following that, the 
+text takes a short look at a pair of the most common interface subcommands: the "shutdown" and "no shutdown" commands,
+which administratively disable and enable the interface, respectively. 
+
+CONFIGURING SPEED, DUPLEX AND DESCRIPTION
+Switch interfaces that support multiple speeds (10/100 and 10/100/1000 interfaces), by default, will autonegotiate what
+speed to use. However, you can configure the speed and duplex settings with the "duplex {auto | full | half}" and "speed 
+{auto | 10 | 100 | 1000}" interface subcommands. Simple enough.
+
+Most of the time, using autonegotiation makes good sense, so when you set the duplex and speed manually using these 
+commands, you typically have a good reason to do so. For instance, maybe you want to set the speed to the fastest 
+possible on links between switches just to avoid the chance that autonegotiation chooses a slower speed.
+
+The "description text" interface subcommand lets you add a text description to the interface. For instance, if you have 
+good reason to configure the speed and duplex on a port, maybe add a description that says why you did. (Image1.PNG)
+The show interfaces status command lists much of the detail configured in Image1.PNG. Note that the “auto” text under the
+speed and duplex heading means that this port will attempt to autonegotiate both settings when the port comes up.
+
+    FastEthernet 0/4 (Fa0/4): Like Fa0/2, this port has all default configuration but was cabled
+    to another working device to give yet another contrasting example. This device completed
+    the autonegotiation process, so instead of “auto” under the speed and duplex headings,
+    the output lists the negotiated speed and duplex (a-full and a-100). Note that the text
+    includes the a- to mean that the listed speed and duplex values were autonegotiated.
+
+CONFIGURING MULTIPLE INTERFACES WITH interface range COMMAND
+To do so, use the "interface range" command. In the example, the "interface range FastEthernet 0/11 - 20" command tells IOS
+that the next subcommand(s) apply to interfaces Fa0/11 through Fa0/20. You can define a range as long as all interfaces are
+the same type and are numbered consecutively.
+
+ADMINISTRATIVELY CONTROLLING INTERFACE STATE WITH shutdown
+As you might imagine, network engineers need a way to bring down an interface without having to travel to the switch and 
+remove a cable. In short, we need to be able to decide which ports should be enabled and which should be disabled.
+
+In an odd turn of phrase, Cisco uses two interface subcommands to configure the idea of administratively enabling and 
+disabling an interface: the "shutdown" command (to disable) and the "no shutdown" command (to enable). While the "no shutdown"
+command might seem like an odd command to enable an interface at first, you will use this command a lot in the lab, and it
+will become second nature. (Most people, in fact, use the abbreviations "shut" and "no shut".)
+
+Image2.PNG shows an example of disabling an interface using the shutdown interface subcommand. In this case, switch SW1 has a
+working interface F0/1. The user connects at the console and disables the interface. 
+
+The "show interfaces status" command lists one line of output per interface, and when shut down, lists the interface status as
+“disabled". The "show interfaces" command (without the "status" keyword) lists many lines of output per interface, giving a much
+more detailed picture of interface status and statistics. With that command, the interface status comes in two parts, with one
+part using the phrase “administratively down,” matching the highlighted log message in Image2.PNG.
+
+REMOVING CONFIGURATION WITH no COMMAND
+With some IOS configuration commands (but not all), you can revert to the default setting by issuing a no version of the command.
+What does that mean? Let me give you a few examples:
+    ■ If you earlier had configured "speed 100" on an interface, the "no speed" command on that
+      same interface reverts to the default speed setting (which happens to be speed auto).
+    ■ Same idea with the duplex command: an earlier configuration of "duplex half" or "duplex
+      full", followed by "no duplex" on the same interface, reverts the configuration back to the
+      default of duplex auto.
+    ■ If you had configured a description command with some text, to go back to the default
+      state of having "no description" command at all for that interface, use the "no description"
+      command.
+
+Image3.PNG shows the process. In this case, switch SW1’s F0/2 port has been configured with speed 100, duplex half, description
+link to 2901-2, and shutdown. 
+
+AUTONEGOTIATION
+For any 10/100 or 10/100/1000 interfaces—that is, interfaces that can run at different speeds—Cisco Catalyst switches default to
+a setting of duplex auto and speed auto. As a result, those interfaces attempt to automatically determine the speed and duplex
+setting to use. 
+
+In practice, using autonegotiation is easy: just leave the speed and duplex at the default setting, and let the switch port 
+negotiate what settings to use on each port. However, problems can occur due to unfortunate combinations of configuration. 
+Therefore, this next topic walks through more detail about the concepts behind autonegotiation, so you know better how to interpret
+the meaning of the switch show commands and when to choose to use a particular configuration setting.
+
+AUTONEGOTIATION UNDER WORKING CONDITIONS
+Ethernet devices on the ends of a link must use the same standard; otherwise, they cannot correctly send data. For example, a NIC
+cannot use 100BASE-T, which uses a two-pair UTP cable with a 100-Mbps speed, while the switch port on the other end of the link uses
+1000BASE-T. Even if you used a cable that works with Gigabit Ethernet, the link would not work with one end trying to send at 100
+Mbps while the other tried to receive the data at 1000 Mbps
+
+The IEEE autonegotiation protocol helps makes it much easier to operate a LAN when NICs and switch ports support multiple speeds. 
+IEEE autonegotiation (IEEE standard 802.3u) defines a protocol that lets the two UTP-based Ethernet nodes on a link negotiate so that
+they each choose to use the same speed and duplex settings. The protocol messages flow outside the normal Ethernet electrical 
+frequencies as out-of-band signals over the UTP cable. Basically, each node states what it can do, and then each node picks the best
+options that both nodes support: the fastest speed and the best duplex setting, with full duplex being better than half duplex.
+
+NOTE Autonegotiation relies on the fact that the IEEE uses the same wiring pinouts for 10BASE-T and 100BASE-T, and that 1000BASE-T
+simply adds to those pinouts, adding two pairs.
+
+Many networks use autonegotiation every day, particularly between user devices and the access layer LAN switches, as shown in Image4.PNG.
+The company installed four-pair cabling of the right quality to support 1000BASE-T, to be ready to support Gigabit Ethernet. As a result,
+the wiring supports 10-Mbps, 100-Mbps, and 1000-Mbps Ethernet options. Both nodes on each link send autonegotiation messages to each other.
+The switch in this case has all 10/100/1000 ports, while the PC NICs support different options. The following list breaks down the logic, 
+one PC at a time:
+    PC1: The switch port claims it can go as fast as 1000 Mbps, but PC1’s NIC claims a top
+         speed of 10 Mbps. Both the PC and the switch choose the fastest speed that each supports (10 Mbps) and the best duplex that each supports (full).
+    PC2: PC2 claims a best speed of 100 Mbps, which means it can use 10BASE-T or
+         100BASE-T. The switch port and NIC negotiate to use the best speed of 100 Mbps and
+         full duplex.
+    PC3: It uses a 10/100/1000 NIC, supporting all three speeds and standards, so both the
+         NIC and switch port choose 1000 Mbps and full duplex.

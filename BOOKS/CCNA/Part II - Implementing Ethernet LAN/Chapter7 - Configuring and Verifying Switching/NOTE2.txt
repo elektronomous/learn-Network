@@ -1,0 +1,104 @@
+AUTONEGOTIATION RESULTS WHEN ONLY ONE NODE USES AUTONEGOTIATION
+most Ethernet devices can disable autonegotiation, so it is just as important to know what happens when a
+node tries to use autonegotiation but the node gets no response.
+
+Disabling autonegotiation is not always a bad idea. For instance, many network engineers disable 
+autonegotiation on links between switches and simply configure the desired speed and duplex on both 
+switches. However, mistakes can happen when one device on an Ethernet predefines speed and duplex (and 
+disables autonegotiation), while the device on the other end attempts autonegotiation. In that case, the
+link might not work at all, or it might just work poorly.
+
+NOTE Configuring both the speed and duplex on a Cisco Catalyst switch interface disables autonegotiation.
+
+IEEE autonegotiation defines some rules (defaults) that nodes should use as defaults when autonegotiation
+fails—that is, when a node tries to use autonegotiation but hears nothing from the device. The rules:
+    ■ Speed: Use your slowest supported speed (often 10 Mbps).
+    ■ Duplex: If your speed = 10 or 100, use half duplex; otherwise, use full duplex.
+
+Cisco switches can make a better choice than that base IEEE speed default because Cisco switches can actually
+sense the speed used by other nodes, even without IEEE autonegotiation. As a result, Cisco switches use this
+slightly different logic to choose the speed when autonegotiation fails:
+    ■ Speed: Sense the speed (without using autonegotiation), but if that fails, use the IEEE
+      default (slowest supported speed, often 10 Mbps).
+    ■ Duplex: Use the IEEE defaults: If speed = 10 or 100, use half duplex; otherwise, use full
+      duplex.
+
+NOTE Ethernet interfaces using speeds faster than 1 Gbps always use full duplex.
+
+Image5.PNG shows three examples in which three users change their NIC settings and disable autonegotiation, while
+the switch (with all 10/100/1000 ports) attempts autonegotiation. That is, the switch ports all default to speed
+auto and duplex auto. The top of the figure shows the configured settings on each PC NIC, with the choices made by
+the switch listed next to each switch port. Reviewing each link, left to right:
+    ■ PC1: The switch receives no autonegotiation messages, so it senses the electrical signal
+           to learn that PC1 is sending data at 100 Mbps. The switch uses the IEEE default duplex
+           based on the 100 Mbps speed (half duplex).
+    ■ PC2: The switch uses the same steps and logic as with the link to PC1, except that the
+           switch chooses to use full duplex because the speed is 1000 Mbps.
+    ■ PC3: The user picks poorly, choosing the slower speed (10 Mbps) and the worse duplex
+           setting (half). However, the Cisco switch senses the speed without using IEEE autonegotiation and then
+           uses the IEEE duplex default for 10-Mbps links (half duplex).
+
+PC1 shows a classic and unfortunately common end result: a duplex mismatch. The two nodes (PC1 and SW1’s port G0/1)
+both use 100 Mbps, so they can send data. However, PC1, using full duplex, does not attempt to use carrier sense
+multiple access with collision detection (CSMA/CD) logic and sends frames at any time. Switch port F0/1, with half 
+duplex, does use CSMA/CD. As a result, switch port F0/1 will believe collisions occur on the link, even if none
+physically occur. The switch port will stop transmitting, back off, resend frames, and so on. As a result, the link
+is up, but it performs poorly. The upcoming section titled “Interface Speed and Duplex Issues” will revisit this 
+problem with a focus on how to recognize the symptoms of a duplex mismatch.
+
+AUTONEGOTIATION AND LAN HUBS
+Basically, hubs do not react to autonegotiation messages, and they do not forward the messages. As a result, devices
+connected to a hub must use the IEEE rules for choosing default settings, which often results in the devices using 10
+Mbps and half duplex.
+
+ANALYZING SWITCH INTERFACE STATUS AND STATISTICS
+This section looks at those more unusual cases in which the interface is working but not working well, as revealed by
+different interface status codes and statistics.
+
+INTERFACE STATUS CODES AND REASONS FOR NONWORKING STATES
+Cisco switches actually use two different sets of interface status codes—one set of two codes (words) that use the same
+conventions as do router interface status codes, and another set with a single code (word). Both sets of status codes
+can determine whether an interface is working.
+
+The switch "show interfaces" and "show interfaces description" commands list the two-code status named the line status and
+protocol status. The line status generally refers to whether Layer 1 is working, with protocol status generally referring
+to whether Layer 2 is working. Image6.PNG lists the code combinations and some root causes that could have caused a 
+particular interface status.
+
+As you can see in the Image6.PNG, having a bad cable is just one of many reasons for the down/down state (or notconnect, 
+per the show interfaces status command). Some examples of the root causes of cabling problems include the following:
+    ■ The installation of any equipment that uses electricity, even non-IT equipment, can interfere with the transmission 
+      on the cabling and make the link fail.
+    ■ The cable could be damaged, for example, if it lies under carpet. If the user’s chair keeps
+      squashing the cable, eventually the electrical signal can degrade.
+    ■ Although optical cables do not suffer from electromagnetic interference (EMI), someone
+      can try to be helpful and move a fiber-optic cable out of the way—bending it too much.
+      A bend into too tight a shape can prevent the cable from transmitting bits (called macrobending).
+
+INTERFACE SPEED AND DUPLEX ISSUES
+To discuss some of the speed and duplex issues, first consider the output from the "show interfaces status" and "show interfaces"
+commands as demonstrated in Image7_(1or2).PNG. The first of these commands lists a one-line summary of the interface status, while the
+second command gives many details—but surprisingly, the briefer show interfaces status command tells us more about autonegotiation.
+
+consider ports Fa0/12 and Fa0/13 in the output of the show interfaces status command. For Fa0/13, a-full means full duplex as 
+autonegotiated, whereas half on Fa0/12 means half duplex but as manually configured. The example shades the command output that implies
+that the switch’s Fa0/12 interface’s speed and duplex were not found through autonegotiation, but Fa0/13 did use autonegotiation.
+
+When a switch must use its defaults, it should get the speed correct, but it may choose the  wrong duplex setting, creating a duplex
+mismatch. For example, in Image8.PNG, imagine that SW2’s Gi0/2 interface was configured with the speed 100 and duplex full commands 
+(these settings are not recommended on a Gigabitcapable interface, by the way). On Cisco switches, configuring both the speed and duplex
+commands disables IEEE autonegotiation on that port. If SW1’s Gi0/1 interface tries to use autonegotiation, SW1 would also use a speed 
+of 100 Mbps, but default to use half duplex. Image9.PNG shows the results of this specific case on SW1.
+
+First, note that even though SW1 had to use an autonegotiation default, the show interfaces status command still shows the speed and 
+duplex with the a- prefix. SW2’s port was manually set to 100/Full, so SW1 sensed the speed and runs at 100 Mbps; however, the 
+autonegotiation rules then tell SW1 to use half duplex, as confirmed by the output in Image9.PNG.
+
+The output does not identify the duplex mismatch in any way; in fact, finding a duplex mismatch can be much more difficult than finding a
+speed mismatch. For instance, if you purposefully set the speed on the link in Image8.PNG to be 10 Mbps on one switch and 100 Mbps on the
+other, both switches would list the port in a down/down or notconnect state. However, in the case shown in Image9.PNG, with a duplex
+mismatch, if the duplex settings do not match on the ends of an Ethernet segment, the switch interface will still be in a connected (up/up)
+or connected state.
+
+To identify duplex mismatch problems, check the duplex setting on each end of the link to see if the values mismatch. You can also watch 
+for incrementing collision and late collision counters, as explained in the next section.
