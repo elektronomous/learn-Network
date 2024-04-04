@@ -66,8 +66,8 @@ points work to create the LAN itself. Routers connect to both the LAN and the WA
 
 THE VARIETY OF ETHERNET PHYSICAL LAYER STANDARDS
 The term Ethernet refers to an entire family of standards. Some standards define the specifics of how to send data
-over a particular type of cabling, and at a particular speed(data-link layer). Other standards define protocols, 
-or rules, that the Ethernet nodes must follow to be a part of an Ethernet LAN(physical layer). All these Ethernet
+over a particular type of cabling, and at a particular speed(physical layer). Other standards define protocols, 
+or rules, that the Ethernet nodes must follow to be a part of an Ethernet LAN(data-link layer). All these Ethernet
 standards come from the IEEE and include the number 802.3 as the beginning part of the standard name.
 
 The most fundamental cabling choice has to do with the materials used inside the cable for the physical 
