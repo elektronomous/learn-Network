@@ -1,0 +1,60 @@
+1. Imagine that you have configured the "enable secret" command, followed by the "enable
+password" command, from the console. You log out of the switch and log back in at
+the console. Which command defines the password that you had to enter to access
+privileged mode?
+a. enable password
+b. enable secret
+c. Neither
+d. The password command, if it is configured
+
+2. An engineer wants to set up simple password protection with no usernames for some
+switches in a lab, for the purpose of keeping curious coworkers from logging in to the
+lab switches from their desktop PCs. Which of the following commands would be a
+useful part of that configuration?
+a. A login vty mode subcommand
+b. A password password console subcommand
+c. A login local vty subcommand
+d. A transport input ssh vty subcommand
+
+3. An engineer had formerly configured a Cisco 2960 switch to allow Telnet access so
+that the switch expected a password of mypassword from the Telnet user. The engineer then changed the configuration to support Secure Shell. Which of the following
+commands could have been part of the new configuration? (Choose two answers.)
+a. A username name secret password vty mode subcommand
+b. A username name secret password global configuration command
+c. A login local vty mode subcommand
+d. A transport input ssh global configuration command
+
+4. An engineer’s desktop PC connects to a switch at the main site. A router at the main
+site connects to each branch office through a serial link, with one small router and
+switch at each branch. Which of the following commands must be configured on the
+branch office switches, in the listed configuration mode, to allow the engineer to telnet to the branch office switches and supply only a password to login? (Choose three
+answers.)
+a. The ip address command in interface configuration mode
+b. The ip address command in global configuration mode
+c. The ip default-gateway command in VLAN configuration mode
+d. The ip default-gateway command in global configuration mode
+e. The password command in console line configuration mode
+f. The password command in vty line configuration mode
+
+5. A Layer 2 switch configuration places all its physical ports into VLAN 2. The IP
+addressing plan shows that address 172.16.2.250 (with mask 255.255.255.0) is reserved
+for use by this new LAN switch and that 172.16.2.254 is already configured on the
+router connected to that same VLAN. The switch needs to support SSH connections
+into the switch from any subnet in the network. Which of the following commands are
+part of the required configuration in this case? (Choose two answers.)
+a. The ip address 172.16.2.250 255.255.255.0 command in interface vlan 1 configuration mode.
+b. The ip address 172.16.2.250 255.255.255.0 command in interface vlan 2 configuration mode.
+c. The ip default-gateway 172.16.2.254 command in global configuration mode.
+d. The switch cannot support SSH because all its ports connect to VLAN 2, and the
+IP address must be configured on interface VLAN 1.
+
+6. Which of the following line subcommands tells a switch to wait until a show command’s output has completed before displaying log messages on the screen?
+a. logging synchronous
+b. no ip domain-lookup
+c. exec-timeout 0 0
+d. history size 15
+
+1. A
+2. A
+3. B, C
+4. 

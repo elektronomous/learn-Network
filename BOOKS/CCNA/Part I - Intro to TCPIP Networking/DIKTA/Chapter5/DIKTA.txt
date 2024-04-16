@@ -1,0 +1,70 @@
+1. Which of the following statements describes part of the process of how a switch
+decides to forward a frame destined for a known unicast MAC address?
+a. It compares the unicast destination address to the bridging, or MAC address, table.
+b. It compares the unicast source address to the bridging, or MAC address, table.
+c. It forwards the frame out all interfaces in the same VLAN except for the incoming
+interface.
+d. It compares the destination IP address to the destination MAC address.
+e. It compares the frame’s incoming interface to the source MAC entry in the MAC
+address table.
+
+2. Which of the following statements describes part of the process of how a LAN switch
+decides to forward a frame destined for a broadcast MAC address?
+a. It compares the unicast destination address to the bridging, or MAC address, table.
+b. It compares the unicast source address to the bridging, or MAC address, table.
+c. It recognizes the destination MAC address as the special case of the Ethernet
+broadcast address.
+d. It compares the destination IP address to the destination MAC address.
+e. It compares the frame’s incoming interface to the source MAC entry in the MAC
+address table.
+
+3. Which of the following statements best describes what a switch does with a frame
+destined for an unknown unicast address?
+a. It forwards out all interfaces in the same VLAN except for the incoming interface.
+b. It forwards the frame out the one interface identified by the matching entry in the
+MAC address table.
+c. It compares the destination IP address to the destination MAC address.
+d. It compares the frame’s incoming interface to the source MAC entry in the MAC
+address table.
+
+4. Which of the following comparisons does a switch make when deciding whether a
+new MAC address should be added to its MAC address table?
+a. It compares the unicast destination address to the bridging, or MAC address, table.
+b. It compares the unicast source address to the bridging, or MAC address, table.
+c. It compares the VLAN ID to the bridging, or MAC address, table.
+d. It compares the destination IP address’s ARP cache entry to the bridging, or MAC
+address, table.
+
+5. A Cisco Catalyst switch has 24 10/100 ports, numbered 0/1 through 0/24. Ten PCs
+connect to the 10 lowest numbered ports, with those PCs working and sending data
+over the network. The other ports are not connected to any device. Which of the following answers lists facts displayed by the show interfaces status command?
+a. Port Ethernet 0/1 is in a connected state.
+b. Port Fast Ethernet 0/11 is in a connected state.
+c. Port Fast Ethernet 0/5 is in a connected state.
+d. Port Ethernet 0/15 is in a notconnected state.
+
+6. Consider the following output from a Cisco Catalyst switch:
+SW1# show mac address-table dynamic
+Mac Address Table
+-------------------------------------------
+Vlan    Mac Address     Type        Ports
+----    -----------     --------    -----
+1       02AA.AAAA.AAAA  DYNAMIC     Gi0/1
+1       02BB.BBBB.BBBB  DYNAMIC     Gi0/2
+1       02CC.CCCC.CCCC  DYNAMIC     Gi0/3
+Total Mac Addresses for this criterion: 3
+Which of the following answers is true about this switch?
+a. The output proves that port Gi0/2 connects directly to a device that uses address
+02BB.BBBB.BBBB.
+b. The switch has learned three MAC addresses since the switch powered on.
+c. The three listed MAC addresses were learned based on the destination MAC
+address of frames forwarded by the switch.
+d. 02CC.CCCC.CCCC was learned from the source MAC address of a frame that
+entered port Gi0/3.
+
+1. A
+2. C
+3. A 
+4. B
+5. D => YOU WRONG HERE (The answer: C)
+6. D 
