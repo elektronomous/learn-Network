@@ -51,12 +51,17 @@
                 (config-vty)# transport input all => allow both of them
                 (config-vty)# history size x => sets the default number of commands saved in the history buffer for the users of the vty line
       (config)# interface Fa0/1 => configure the interface Fa0/1
-      (config)# interface vlan 1 => configure the interface of vlan 1
+                (config-if)# speed n_value => set the speed for the interface Fa0/1
+                (config-if)# duplex (half|full) => set the duplex for the interface Fa0/1
+                (config-if)# no shutdown => enable the interface if it's shutdown
       (config)# interface name number => configure the interfaces name numbers
-                          (config-if)# ip address dhcp => make the interface to get the ip address by learn from DHCP
-                          (config-if)# ip address ip_address mask => set the ip address(10.10.1.2) and the mask (255.255.255.0)
-                          (config-if)# no shutdown => enable the interface if the interface is shutdown
-                          (config-if)# shutdown => disable the interface
+      (config)# interface range Fa0/1 Fa0/15 => set configuration for the interface Fa0/1 to Fa0/15
+                (config-if)# description your_description => set the description for the interface
+      (config)# interface vlan 1 => configure the interface of vlan 1
+                (config-if)# ip address dhcp => make the interface to get the ip address by learn from DHCP
+                (config-if)# ip address ip_address mask => set the ip address(10.10.1.2) and the mask (255.255.255.0)
+                (config-if)# no shutdown => enable the interface if the interface is shutdown
+                (config-if)# shutdown => disable the interface
 
 > show mac address-table => To see a switch’s MAC address table, 
 > show mac address-table dynamic => lists the table the switch uses to make forwarding decisions. A switch’s MAC address table basically

@@ -1,0 +1,22 @@
+For this lab, you need to configure passwords, plus a few other administrative settings. Note 
+that this lab does not ask you to configure IP addressing, leaving that to other labs. However,
+this lab does ask you to configure the rest of the settings to prepare to allow for inbound
+Telnet and SSH into the switches.
+
+The requirements are as follows.
+
+    1. On both switches, protect the console using the password “fred”.
+    2. On switch SW1, allow telnet but not SSH into the switch, with simple password protection 
+       without using a username. Use password “sw1”.
+    3. On switch SW2, allow both telnet and SSH into the switch, with both a username and password.
+       You can choose the actual username and password.
+    4. On both SW1 and SW2, do not yet configure IP details; defer that work until the router folks
+       tell you what IP addresses to use.
+    5. Give each switch a hostname to match the figure.
+    6. For each interface used in the lab, document the device’s name on the other end of the link
+       connected to the interface. For instance, for SW1, port G1/0/1, document that “PC1” is on the
+       other end of the link.
+    7. On switch SW1, protect privileged mode using the older style (and easier to break) password.
+       Make this password “sw1bad”.
+    8. On switch SW2, protect privileged mode using the newer style (and more secure) password that
+       uses MD5 encoding. Make this password “sw2good”.

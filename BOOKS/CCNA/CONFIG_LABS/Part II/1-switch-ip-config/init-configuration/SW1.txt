@@ -1,0 +1,23 @@
+hostname SW1
+!
+enable password sw1bad
+!
+interface GigabitEthernet1/0/1  
+ description connected to PC1 
+! 
+interface GigabitEthernet1/0/2
+ description connected to PC2
+! 
+interface GigabitEthernet1/0/3  
+ description connected to PC3 
+! 
+interface GigabitEthernet1/0/11 
+ description connected to SW2 
+! 
+line con 0 
+ login 
+ password fred 
+line vty 0 15 
+ login 
+ password sw1 
+ transport input telnet

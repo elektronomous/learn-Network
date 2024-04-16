@@ -1,0 +1,30 @@
+hostname SW2
+!
+ip domain-name example.com
+crypto key generate rsa modulus 768
+username fred password barney
+!
+enable secret sw2good
+!
+interface GigabitEthernet1/0/4
+ description connected to PC4
+!
+interface GigabitEthernet1/0/5
+ description connected to PC5
+!
+interface GigabitEthernet1/0/6
+ description connected to PC6
+!
+interface GigabitEthernet1/0/12
+ description connected to SW1
+! 
+interface GigabitEthernet1/0/7
+ description connected to R1
+!
+line con 0
+ login
+ password fred
+!
+line vty 0 15
+ login local
+ transport input all

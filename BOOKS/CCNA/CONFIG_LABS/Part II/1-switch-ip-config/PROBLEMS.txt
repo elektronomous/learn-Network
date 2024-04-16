@@ -1,0 +1,14 @@
+For this lab, you should configure the IP settings for the two LAN switches. You need to decide what IP 
+settings need to be configured and then plan the specific configuration commands. The list of requirements
+includes the subnet ID to use. Specifically:
+
+    1. Both switches use VLAN 1 as the management VLAN.
+    2. Use subnet 192.168.1.0/27.
+    3. Use the numerically highest IP addresses: the highest for the router’s G0/0 interface into the LAN,
+       the next highest for SW1’s management address, and the next highest for SW2’s management address. 
+       Note that R1’s IP address has been pre-configured for the purposes of this lab.
+    4. Configure SW1 and SW2 to allow communication off-subnet as well as on-subnet.
+    5. Neither switch uses VLAN trunking, and all ports are in the default VLAN (1).
+
+(answer):
+= You can see the answer in file with extension .pkt

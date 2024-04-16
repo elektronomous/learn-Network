@@ -15,7 +15,7 @@ Table 2-3 lists the devices and the pin pairs they use, assuming that they use 1
     Routers                                     Switches
     Wireless access point (Ethernet interface)  —
 
-For example, Figure 2-13 shows a campus LAN in a single building. In this case, several straight
+For example, Image19.PNG shows a campus LAN in a single building. In this case, several straight
 -through cables are used to connect PCs to switches. In addition, the cables connecting the 
 switches require crossover cables.
 
@@ -85,10 +85,10 @@ Table 2-4.
 
         Standard        Cable Type      Max Distance*
         ――――――――――――――――――――――――――――――――――――――――――――――――――
-        10GBASE-S       MM              400m
-        10GBASE-LX4     MM              300m
-        10GBASE-LR      SM              10km
-        10GBASE-E       SM              30km
+        10GBASE-S       MM              400m                S for short
+        10GBASE-LX4     MM              300m                LX for long extension
+        10GBASE-LR      SM              10km                LR for long range
+        10GBASE-E       SM              30km                E for extended
         * The maximum distances are based on the IEEE standards with no repeaters
 
 UTP wins again on cost, because the cost goes up as you move from UTP, to multimode, and then to single-mode,
