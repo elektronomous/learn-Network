@@ -46,7 +46,7 @@ checklist shows one simple way to configure it.):
 
     Step 1. Configure the switch to generate a matched public and private key pair to use
             for encryption:
-                A. If not already configured, use the hostname name in global configuration
+                A. If not already configured, use the "hostname name" in global configuration
                 mode to configure a hostname for this switch.
                 B. If not already configured, use the "ip domain-name name" in global configuration mode to configure a domain name
                    for the switch, completing the switch’s FQDN.

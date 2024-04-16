@@ -20,7 +20,7 @@ memory found in Cisco switches, as well as the most common use of each type(Imag
     ■ NVRAM: Nonvolatile RAM (NVRAM) stores the initial or startup configuration file that
              is used when the switch is first powered on and when the switch is reloaded.
 
-when the switch is on, the first software that's it's look up is the NVRAM, then the ROM, and the FLASH MEMORY.
+when the switch is on, the first software that's it's look up is the ROM, then the FLASH MEMORY and the NVRAM.
 switches use multiple configuration files—one file for the initial configuration used when powering on, and
 another configuration file for the active, currently used running configuration as stored in RAM. Table 4-5 
 lists the names of these two files, their purpose, and their storage location.
