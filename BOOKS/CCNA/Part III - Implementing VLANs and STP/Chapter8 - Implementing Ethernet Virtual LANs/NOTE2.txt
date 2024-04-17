@@ -1,0 +1,6 @@
+THE 802.1Q and ISL VLAN TRUNKING PROTOCOLS
+Cisco has supported two different trunking protocols over the years: Inter-Switch Link (ISL) and IEEE
+802.1Q. Cisco created the ISL years before 802.1Q, in part because the IEEE had not yet defined a VLAN
+trunking standard. Today, 802.1Q has become the more popular trunking protocol, with Cisco not even 
+bothering to support ISL in many of its switch models today.
+

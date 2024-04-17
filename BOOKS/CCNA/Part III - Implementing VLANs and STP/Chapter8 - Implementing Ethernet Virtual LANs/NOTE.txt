@@ -1,0 +1,100 @@
+However, the two primary features discussed in Part III of this book—Virtual LANs (VLANs) and
+Spanning Tree Protocol (STP). VLANs allow a network engineer to create separate Ethernet LANs
+through simple configuration choices. The ability to separate some switch ports into one VLAN
+and other switch ports into another VLAN gives network designers a powerful tool for creating
+networks. Once created, VLANs also have a huge impact on how a switch works, which then impacts
+how you verify and troubleshoot the operation of a campus LAN
+
+STP—and the related and similar Rapid STP (RSTP)—acts to prevent frames from looping around a
+LAN. Without STP or RSTP, in LANs with redundant(berlebihan) links, broadcasts and some other frames would
+be forwarded around and around the LAN, eventually clogging(menyumbat) the LAN so much as to make it
+unusable.
+
+VIRTUAL LAN CONCEPTS
+Before understanding VLANs, you must first have a specific understanding of the definition of a
+LAN. For example, from one perspective, a LAN includes all the user devices, servers, switches,
+routers, cables, and wireless access points in one location. However, an alternative narrower 
+definition of a LAN can help in understanding the concept of a virtual LAN:
+    
+    A LAN includes all devices in the same broadcast domain.
+
+A broadcast domain includes the set of all LAN-connected devices, so that when any of the devices
+sends a broadcast frame, all the other devices get a copy of the frame. So, from one perspective,
+you can think of a LAN and a broadcast domain as being basically the same thing.
+
+Using only default settings, a switch considers all its interfaces to be in the same broadcast 
+domain. That is, for one switch, when a broadcast frame entered one switch port, the switch
+forwards that broadcast frame out all other ports. With that logic, to create two different LAN
+broadcast domains, you had to buy two different Ethernet LAN switches, as shown in Image1.PNG.
+
+By using two VLANs, a single switch can accomplish the same goals of the design in Image1.PNG—to
+create two broadcast domains—with a single switch. With VLANs, a switch can configure some interfaces
+into one broadcast domain and some into another, creating multiple broadcast domains. These individual
+broadcast domains created by the switch are called virtual LANs (VLAN).
+
+For example, in Image2.PNG, the single switch creates two VLANs, treating the ports in each VLAN as 
+being completely separate. The switch would never forward a frame sent by Dino (in VLAN 1) over to 
+either Wilma or Betty (in VLAN 2).
+
+Designing campus LANs to use more VLANs, each with a smaller number of devices, often helps improve
+the LAN in many ways. For example, a broadcast sent by one host in a VLAN will be received and 
+processed by all the other hosts in the VLAN—but not by hosts in a different VLAN. Limiting the number
+of hosts that receive a single broadcast frame reduces the number of hosts that waste effort processing
+unneeded broadcasts. It also reduces security risks because fewer hosts see frames sent by any one host.
+These are just a few reasons for separating hosts into different VLANs. The following list summarizes
+the most common reasons for choosing to create smaller broadcast domains (VLANs):
+    ■ To reduce CPU overhead on each device, improving host performance, by reducing the
+      number of devices that receive each broadcast frame
+    ■ To reduce security risks by reducing the number of hosts that receive copies of frames
+      that the switches flood (broadcasts, multicasts, and unknown unicasts)
+    ■ To improve security for hosts through the application of different security policies per
+      VLAN
+    ■ To create more flexible designs that group users by department, or by groups that work
+      together, instead of by physical location
+    ■ To solve problems more quickly, because the failure domain for many problems is the
+      same set of devices as those in the same broadcast domain
+    ■ To reduce the workload for the Spanning Tree Protocol (STP) by limiting a VLAN to a
+      single access switch
+
+CREATE MULTISWITCH VLANs USING TRUNKING
+Configuring VLANs on a single switch requires only a little effort: you simply configure each port to tell it
+the VLAN number to which the port belongs. With multiple switches, you have to consider additional concepts 
+about how to forward traffic between the switches.
+
+When you are using VLANs in networks that have multiple interconnected switches, the switches need to use VLAN
+trunking on the links between the switches. VLAN trunking causes the switches to use a process called VLAN 
+tagging, by which the sending switch adds another header to the frame before sending it over the trunk. This
+extra trunking header includes a VLAN identifier (VLAN ID) field so that the sending switch can associate the
+frame with a particular VLAN ID, and the receiving switch can then know in what VLAN each frame belongs.
+
+Image3.PNG shows an example that demonstrates VLANs that exist on multiple switches, but it does not use trunking.
+First, the design uses two VLANs: VLAN 10 and VLAN 20. Each switch has two ports assigned to each VLAN, so each
+VLAN exists in both switches. To forward traffic in VLAN 10 between the two switches, the design includes a link
+between switches, with that link fully inside VLAN 10. Likewise, to support VLAN 20 traffic between switches, the
+design uses a second link between switches, with that link inside VLAN 20.
+
+The design shown in Image3.PNG works, but it simply does not scale very well. It requires one physical link between
+switches to support every VLAN. If a design needed 10 or 20 VLANs, you would need 10 or 20 links between switches,
+and you would use 10 or 20 switch ports (on each switch) for those links.
+
+VLAN TAGGING CONCEPTS
+VLAN trunking creates one link between switches that supports as many VLANs as you need. As a VLAN trunk, the switches
+treat the link as if it were a part of all the VLANs. At the same time, the trunk keeps the VLAN traffic separate, so
+frames in VLAN 10 would not go to devices in VLAN 20, and vice versa, because each frame is identified by VLAN number
+as it crosses the trunk. Image4.PNG shows the idea, with a single physical link between the two switches.
+
+The use of trunking allows switches to forward frames from multiple VLANs over a single physical connection by adding a
+small header to the Ethernet frame. For example, Image5.PNG shows PC11 sending a broadcast frame on interface Fa0/1 at
+Step 1. To flood the frame, switch SW1 needs to forward the broadcast frame to switch SW2. However, SW1 needs to let SW2
+know that the frame is part of VLAN 10, so that after the frame is received, SW2 will flood the frame only into VLAN 10,
+and not into VLAN 20. So, as shown at Step 2, before sending the frame, SW1 adds a VLAN header to the original Ethernet
+frame, with the VLAN header listing a VLAN ID of 10 in this case.
+
+When SW2 receives the frame, it understands that the frame is in VLAN 10. SW2 then removes the VLAN header, forwarding 
+the original frame out its interfaces in VLAN 10 (Step 3).
+
+For another example, consider the case when PC21 (in VLAN 20) sends a broadcast. SW1 sends the broadcast out port Fa0/4
+(because that port is in VLAN 20) and out Gi0/1 (because it is a trunk, meaning that it supports multiple different VLANs).
+SW1 adds a trunking header to the frame, listing a VLAN ID of 20. SW2 strips off the trunking header after determining that
+the frame is part of VLAN 20, so SW2 knows to forward the frame out only ports Fa0/3 and Fa0/4, because they are in VLAN 20,
+and not out ports Fa0/1 and Fa0/2, because they are in VLAN 10
