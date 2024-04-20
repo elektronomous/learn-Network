@@ -1,0 +1,161 @@
+VLAN CONFIGURATION EXAMPLE 1: FULL VLAN CONFIGURATION
+The Image10.PNG begins with the "show vlan brief" command, confirming the default settings of five nondeletable
+VLANs, with all interfaces assigned to VLAN 1. VLAN 1 cannot be deleted but can be used. VLANs 1002–1005 cannot
+be deleted and cannot be used as access VLANs today. In particular, note that this 2960 switch has 24 Fast 
+Ethernet ports (Fa0/1– Fa0/24) and two Gigabit Ethernet ports (Gi0/1 and Gi0/2), all of which are listed as 
+being in VLAN 1 per that first command's output, confirming that by default, Cisco switches assign all port to
+VLAN 1.
+
+Next, Image11.PNG shows steps that mirror the VLAN configuration checklist, namely the configuration of VLAN 2,
+plus the assignment of VLAN 2 as the access VLAN on two ports: Fa0/13 and Fa0/14.
+
+To complete this scenario, Image12.PNG shows a little more detail about the VLAN itself. Example 8-3 ends with 
+the "show vlan id 2" command, which confirms the operational status that ports Fa0/13 and Fa0/14 are assigned 
+to VLAN 2.
+
+The example surrounding Image9.PNG uses six switch ports, all of which need to operate as access ports. That is,
+each port should not use trunking but instead should be assigned to a single VLAN, as assigned by the "switchport
+access vlan vlan-id" command. For ports that should always act as access ports, add the optional interface 
+subcommand "switchport mode access". This command tells the switch to always be an access interface and disables
+the protocol that negotiates trunking (Dynamic Trunking Protocol [DTP]) with the device on the other end of the link. 
+
+VLAN CONFIGURATION EXAMPLE 2: SHORTER VLAN CONFIGURATION
+(Image13.PNG): The configuration completes the configuration of the design shown in Image9.PNG, by adding two ports 
+to VLAN 3.
+
+VLAN TRUNKING PROTOCOL (VTP)
+VTP is a Cisco proprietary(hak milik) tool on Cisco switches that advertises each VLAN configured in one switch (with
+the "vlan number" command) so that all the other switches in the campus learn about that VLAN.
+
+This book does not discuss VTP as an end to itself for a few different reasons. First, the current CCNA 200-301 exam
+blueprint ignores VTP, as do the CCNP Enterprise Core and CCNP Enterprise Advanced Routing blueprints. Additionally,
+many enterprises choose to disable VTP.
+
+First, all examples in this book (and in Volume 2) use switches that disable VTP in some way. Interestingly, for much
+of VTP’s decades of existence, most switches did not allow VTP to be disabled completely; on those switches, to 
+effectively disable VTP, the engineer would set the switch to use VTP transparent mode (with the "vtp mode transparent"
+global command). Some switches now have an option to disable VTP completely with the "vtp mode off" global command. For
+the purposes of this book, configuring a switch with either transparent mode or off mode disables VTP.
+
+Note that both transparent and off modes prevent VTP from learning and advertising about VLAN configuration. Those modes
+allow a switch to configure all VLANs, including standard- and extended-range VLANs. Additionally, switches using 
+transparent or off modes list the vlan configuration commands in the running-config file.
+
+Finally, on a practical note, if you happen to do lab exercises with real switches or with simulators, and you see unusual
+results with VLANs, check the VTP status with the "show vtp status" command. If your switch uses VTP server or client mode,
+you will find
+    ■ The server switches can configure VLANs in the standard range only (1–1005).
+    ■ The client switches cannot configure VLANs.
+    ■ Both servers and clients may be learning new VLANs from other switches and seeing
+      their VLANs deleted by other switches because of VTP.
+    ■ The "show running-config" command does not list any vlan commands; you must use
+      other show commands to find out about the configured VLANs.
+
+NOTE Do not change VTP settings on any switch that also connects to the production network until you know how VTP works and
+you talk with experienced colleagues. Doing so can cause real harm to your LAN. For example, if the switch you configure 
+connects to other switches, which in turn connect to switches used in the production LAN, you could accidentally change the
+VLAN configuration in other switches with serious impact to the operation of the network. You could delete VLANs and cause
+outages(pemadaman). Be careful and never experiment with VTP settings on a switch unless it and the other switches connected
+to it have absolutely no physical links connected to the production LAN.
+
+VLAN TRUNKING CONFIGURATION
+Trunking configuration between two Cisco switches can be very simple if you just statically configure trunking. For example,
+most Cisco Catalyst switches today support only 802.1Q and not ISL. You could literally add one interface subcommand for the
+switch interface on each side of the link ("switchport mode trunk"), and you would create a VLAN trunk that supported all the
+VLANs known to each switch.
+
+However, trunking configuration on Cisco switches includes many more options, including several options for dynamically 
+negotiating various trunking settings. The configuration can either predefine different settings or tell the switch to 
+negotiate the settings, as follows:
+    ■ The type of trunking: IEEE 802.1Q, ISL, or negotiate which one to use, on switches that
+      support both types of trunking.
+    ■ The administrative mode: Whether to always trunk, always not trunk, or negotiate
+      whether to trunk or not.
+
+First, consider the type of trunking. Cisco switches that support ISL and 802.1Q can negotiate which type to use, using the 
+Dynamic Trunking Protocol (DTP). If both switches support both protocols, they use ISL; otherwise, they use the protocol that
+both support. Today, many Cisco switches do not support the older ISL trunking protocol. Switches that support both types of
+trunking use the "switchport trunk encapsulation {dot1q | isl | negotiate}" interface subcommand to either configure the type
+or allow DTP to negotiate the type.
+
+DTP can also negotiate whether the two devices on the link agree to trunk at all, as guided by the local switch port’s 
+administrative mode. The administrative mode refers to the configuration setting for whether trunking should be used. Each
+interface also has an operational mode, which refers to what is currently happening on the interface and might have been 
+chosen by DTP’s negotiation with the other device. Cisco switches use the "switchport mode interface" subcommand to define the
+administrative trunking mode, as listed in Table 8-2.
+
+Table 8-2 Trunking Administrative Mode Options with the switchport mode Command
+    Command Option      Description
+    access              Always act as an access (nontrunk) port
+    trunk               Always act as a trunk port
+    dynamic desirable   Initiates negotiation messages and responds to negotiation messages to
+                        dynamically choose whether to start using trunking
+    dynamic auto        Passively waits to receive trunk negotiation messages, at which point
+                        the switch will respond and negotiate whether to use trunking
+
+For example, consider the two switches shown in Image14.PNG. This figure expands the design shown earlier in Image9.PNG, with a
+trunk to a new switch (SW2) and with parts of VLANs 1 and 3 on ports attached to SW2. The two switches use a Gigabit Ethernet 
+link for the trunk. In this case, the trunk does not dynamically form by default because both (2960) switches default to an 
+administrative mode of dynamic auto, meaning that neither switch initiates the trunk negotiation process. When one switch is 
+changed to use dynamic desirable mode, which does initiate the negotiation, the switches negotiate to use trunking, specifically
+802.1Q because the 2960s support only 802.1Q.
+
+Image15.PNG begins with SW1 configured as shown in Image12.PNG and 13.PNG—that is, SW1 has two ports each assigned to VLANs 1, 2,
+and 3. However, both SW1 and SW2 currently have all default settings on the interfaces that connect the two switches. With the 
+default setting of switchport mode dynamic auto, the two switches do not trunk.
+
+First, focus on the highlighted items from the output of the "show interfaces switchport" command at the beginning of Image15.PNG.
+The output lists the default administrative mode setting of dynamic auto. Because SW2 also defaults to dynamic auto, the command
+lists SW1’s operational status as “access,” meaning that it is not trunking. 
+*operational mode, which refers to what is currently happening on the interface and might have been chosen by DTP’s negotiation with
+the other device. 
+(“Dynamic auto” tells both switches to sit there and wait on the other switch to start the negotiations.) The third shaded line points
+out the only supported type of trunking (802.1Q). (On a switch that supports both ISL and 802.1Q, this value would by default list 
+“negotiate,” to mean that the type of  encapsulation is negotiated.) Finally, the operational trunking type is listed as “native,” 
+which is a reference to the 802.1Q native VLAN.
+
+The end of the example shows the output of the "show interfaces trunk" command, but with no output. This command lists information about all
+interfaces that currently operationally trunk; that is, it lists interfaces that currently use VLAN trunking. With no interfaces listed,
+this command also confirms that the link between switches is not trunking.
+
+Next, consider Image16.PNG, which shows the new configuration that enables trunking. In this case, SW1 is configured with the "switchport mode
+dynamic desirable" command, which asks the switch to both negotiate as well as to begin the negotiation process, rather than waiting on the
+other device. The example shows that as soon as the command is issued, log messages appear showing that the interface goes down and then back
+up again, which happens when the interface transitions from access mode to trunk mode.
+
+Image16.PNG repeats the "show interfaces gi0/1 switchport" command seen in Image15.PNG, but after configuring VLAN trunking, so this time the
+output shows that SW1’s G0/1 interface now operates as a trunk. Note that the command still lists the administrative settings, which denote
+the configured values along with the operational settings, which list what the switch is currently doing. SW1 now claims to be in an 
+operational mode of trunk, with an operational trunking encapsulation of dot1Q.
+
+Image18.PNG now repeats the same show interfaces trunk command that showed no output at all back in Image15.PNG. Now that SW1 trunks on its
+G0/1 port, the output in Image18.PNG lists G0/1, confirming that G0/1 is now operationally trunking. Also, note that the end of the example
+repeats the show vlan id 2 command; of note, it includes the trunk port G0/1 in the output because the trunk port can forward traffic in VLAN 
+2.
+
+NOTE that the "Vlans allowed on trunk" lists VLANs that are their traffics/frames are trunking via Gi0/1 port.  
+
+Table 8-3 lists the combinations of the trunking administrative modes and the expected operational mode (trunk or access) resulting from the
+configured settings. The table lists the administrative mode used on one end of the link on the left, and the administrative mode on the 
+switch on the other end of the link across the top of the table.
+
+Table 8-3 Expected Trunking Operational Mode Based on the Configured Administrative Modes
+Administrative Mode     Access          Dynamic Auto        Trunk           Dynamic Desirable
+―――――――――――――――――――――   ―――――――――――     ――――――――――――――――――――――  ―――――――――――     ――――――――――――――――――――――     
+access                  Access          Access              Do Not Use¹     Access
+dynamic auto            Access          Access              Trunk           Trunk
+trunk                   Do Not Use¹     Trunk               Trunk           Trunk
+dynamic desirable       Access          Trunk               Trunk           Trunk
+    ¹ When two switches configure a mode of “access” on one end and “trunk” on the other, problems occur.
+    Avoid this combination.
+
+if you don't understand the table, let me clear it with simple explanation. When you configure the
+SW1 Administrative Mode "access" for example, then if the SW2 Administrative mode is "Access", the SW1's
+operational mode should be "access" too. Now as the Image16.PNG, the SW1 Administrative mode is "dynamic desirable"
+and the SW2's Administrative mode is "dynamic auto", then the operational mode in SW1 would be "trunk".
+
+Finally, before leaving the discussion of configuring trunks, Cisco recommends disabling trunk negotiation on most ports for
+better security. The majority of switch ports on most switches will be used to connect to users and configured with the command
+"switchport mode access"—which also disables DTP. For ports without the "switchport mode access" command—for instance, ports 
+statically configured to trunk with the "switchport mode trunk" command—DTP still operates, but you can disable DTP negotiations
+altogether using the "switchport nonegotiate" interface subcommand.

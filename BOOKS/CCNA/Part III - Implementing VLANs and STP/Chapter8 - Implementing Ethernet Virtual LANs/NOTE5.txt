@@ -1,0 +1,102 @@
+TROUBLESHOOTING VLANS and VLAN TRUNKS
+This final section of the chapter focuses on issues related to VLANs and VLAN trunks that could prevent LAN switching
+from working properly, focusing on a few items not yet discussed in the chapter. In particular, this section examines
+these steps an engineer can take to avoid issues:
+    Step 1. Confirm that all VLANs are both defined and active.
+    Step 2. Check the allowed VLAN lists on both ends of each trunk to ensure that all
+            VLANs intended to be used are included.
+    Step 3. Check for incorrect trunk configuration settings that result in one switch operating as a trunk, with the 
+            neighboring switch not operating as a trunk.
+    Step 4. Check the native VLAN settings on both ends of the trunk to ensure the settings match.
+
+ACCESS VLANs UNDEFINED OR DISABLED
+Switches do not forward frames for VLANs that are (a) not known because the VLAN is not configured or has not been learned
+with VTP or (b) the VLAN is known, but it is disabled (shut down).
+
+First, on the issue of whether a VLAN exists on a switch, a VLAN can be defined to a switch in two ways: using the "vlan 
+number" global configuration command, or it can be learned from another switch using VTP. As mentioned earlier in this 
+chapter, the examples in this book assume that you are not using VTP. If you discover that a VLAN does not exist on a switch,
+simply configure the VLAN as discussed earlier in the section, “Creating VLANs and Assigning Access VLANs to an Interface.”
+
+In addition to checking the configuration, you can check for the status of the VLAN (as well as whether it is known to the
+switch) using the "show vlan" command. No matter the VTP mode, this command will list all VLANs known to the switch, plus one
+of two VLAN state values, depending on the current state: either active or act/lshut. The second of these states means that 
+the VLAN is shut down. Shutting down a VLAN disables the VLAN on that switch only, so the switch will not forward frames in 
+that VLAN.
+
+Switch IOS gives you two similar configuration methods with which to disable (shutdown) and enable (no shutdown) a VLAN. 
+Image28.PNG shows how, first by using the global command "[no] shutdown vlan number" and then using the VLAN mode subcommand 
+"[no] shutdown". The example shows the global commands enabling and disabling VLANs 10 and 20, respectively, and using VLAN
+subcommands to enable and disable VLANs 30 and 40, respectively.
+
+MISTMATCHED TRUNKING OPERATION STATES
+However, trunks can also be misconfigured, with a couple of different results: either both switches do not trunk, or one 
+switch trunks and the other does not. Both results cause problems.
+The most common incorrect configuration—which results in both switches not trunking—is a configuration that uses the "switchport
+mode dynamic auto" command on both switches on the link. The word auto just makes us all want to think that the link would trunk
+automatically, but this command is both automatic and passive. As a result, both switches passively wait on the other device on
+the link to begin negotiations. Image29.PNG highlights those parts of the output from the "show interfaces switchport" command 
+that confirm both the configured and operational states. Note that the output lists the operational mode as “static access” 
+rather than “trunking.”
+
+A different incorrect trunking configuration has an even worse result: one switch trunks, sending tagged frames, while the 
+neighboring switch does not trunk, so the neighboring switch discards any frames it receives that have a VLAN tag in the header.
+When this combination of events happens, the interface works in that the status on each end will be up/up or connected. Traffic
+in the native VLAN will actually cross the link successfully because those frames have no VLAN tags (headers). However, traffic
+in all the rest of the VLANs will not cross the link.
+
+Image30.PNG shows the incorrect configuration along with which side trunks and which does not. The side that trunks (SW1 in this
+case) enables trunking using the command "switchport mode trunk" but also disables Dynamic Trunking Protocol (DTP) negotiations
+using the "switchport nonegotiate" command. SW2’s configuration also helps create the problem, by using one of the two trunking
+options that relies on DTP. Because SW1 has disabled DTP, SW2’s DTP negotiations fail, and SW2 chooses to not trunk.
+
+The figure shows what happens when using this incorrect configuration. At Step 1, SW1 could (for example) forward a frame in VLAN
+10. However, SW2 would view any frame that arrives with an 802.1Q header as illegal because the frame has an 802.1Q header, and
+SW2 treats its G0/2 port as an access port. So, SW2 discards any 802.1Q frames received on that port.
+
+The trunking issues shown here can be easily avoided by checking the configuration and by checking the trunk’s operational state
+(mode) on both sides of the trunk. The best commands to check trunking-related facts are "show interfaces trunk" and "show 
+interfaces switchport". Just be aware that the switches do not prevent you from making these configuration mistakes.
+
+THE SUPPORTED VLAN LISTS ON TRUNKS
+The first category in this step can be easily done using the "show interfaces interface-id trunk" command, which only lists 
+information about currently operational trunks. The best place to begin with this command is the last section of output, which
+lists the VLANs whose traffic will be forwarded over the trunk. Any VLANs that make it to this final list of VLANs in the
+command output meet the following criteria:
+    ■ The VLAN has not been removed from the allowed VLAN list on the trunk (as configured with the "switchport trunk allowed vlan"
+      interface subcommand).
+    ■ The VLAN exists and is active on the local switch (as seen in the "show vlan" command).
+    ■ The VLAN has not been VTP-pruned from the trunk. (Because this book attempts to ignore VTP as much as possible, this section
+      assumes that VTP is not used and this feature has no impact on any trunks.) The trunk is in an STP forwarding state in that
+      VLAN (as also seen in the "show spanning-tree vlan vlan-id" command).
+
+The "switchport trunk allowed vlan" interface subcommand gives the network engineer a method to administratively limit the VLANs
+whose traffic uses a trunk. If the engineer wants all defined VLANs to be supported on a trunk, the engineer simply does not
+configure this command. If the engineer would like to limit the trunk to support a subset of the VLANs known to the switch, however,
+the engineer can add one or more "switchport trunk allowed vlan" interface subcommands.
+
+For instance, in a switch that has configured VLANs 1 through 100, but no others, by default the switch would allow traffic in all
+100 VLANs. However, the trunk interface command "switchport trunk allowed vlan 1-60" would limit the trunk to forward traffic for
+VLANs 1 through 60, but not the rest of the VLANs. Image31.PNG shows a sample of the command output from the show interfaces trunk
+command, which confirms the first list of VLAN IDs now lists VLANs 1–60. Without the "switchport trunk allowed vlan" command, the
+first list would have included VLANs 1–4094.
+
+The output of the show interfaces trunk command creates three separate lists of VLANs, each under a separate heading. These three
+lists show a progression of reasons why a VLAN is not forwarded over a trunk. Table 8-4 summarizes the headings that precede each
+list and the reasons why a switch chooses to include or not include a VLAN in each list. For instance, in Image31.PNG, VLAN 60 has
+been shut down, and VLAN 59 happens to be in an STP blocking state. (Chapter 9, “Spanning Tree Protocol Concepts,” has more
+information about STP.)
+
+Table 8-4 VLAN Lists in the show interfaces trunk Command
+
+List            Heading                 Reasons
+Position
+――――――――――――――― ―――――――――――――――――――――――――― ―――――――――――――――――――――――――――――――――――――――――
+First           VLANs allowed           VLANs 1–4094, minus those removed by the switchport trunk
+                                        allowed command
+Second          VLANs allowed           The first list, minus VLANs not defined to the local switch (that
+                and active…             is, there is not a vlan global configuration command or the switch                                        
+                                        has not learned of the VLAN with VTP), and also minus those
+                                        VLANs in shutdown mode
+Third           VLANs in                The second list, minus VLANs in an STP blocking state for that
+                spanning tree…          interface, and minus VLANs VTP pruned(pangkas) from that trunk

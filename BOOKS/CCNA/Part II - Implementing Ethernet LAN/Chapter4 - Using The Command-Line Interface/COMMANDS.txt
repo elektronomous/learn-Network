@@ -14,12 +14,15 @@
     # end => Exits configuration mode and goes back to enable mode from any of the configuration submodes.
     # no debug all  => Enable mode EXEC command to disable all currently enabled debugs.
     # undebug all   => Enable mode EXEC command to disable all currently enabled debugs.
+    # show vtp status => show the vlan trunking protocol status
+    # show vlan id_number => look at the set vlan status
     # show interfaces f0/1 counters => One particular option, the counters option, lists statistics about incoming and outgoing frames on the interfaces.
     # show dhcp lease => show the if the interface VLAN IP Management using dhcp
     # show interfaces VLAN 1 => show the VLAN 1
     # show ip default-gateway => show the default-gateway of the switch 
     # clear mac address table dynamic => 
     # configure terminal => enter the configuration terminal mode and make configuration for the current terminal you're working on
+      (config)# vtp mode transparent (off) => disable the VTP
       (config)# no ip domain-lookup => disable the devices features that's when you misstype, they're trying to find the word by using DNS.
       (config)# logging console => enable the log messages after configuration's done
       (config)# no logging console => disable the log messages
@@ -56,6 +59,8 @@
                 (config-if)# no shutdown => enable the interface if it's shutdown
       (config)# interface name number => configure the interfaces name numbers
       (config)# interface range Fa0/1 Fa0/15 => set configuration for the interface Fa0/1 to Fa0/15
+                (config-if)# switchport access vlan 3 => set the interfaces to be in VLAN 3
+                (config-if)# switchport mode access => set the interfaces as access interfaces and disable DTP that negotiate with other switch
                 (config-if)# description your_description => set the description for the interface
       (config)# interface vlan 1 => configure the interface of vlan 1
                 (config-if)# ip address dhcp => make the interface to get the ip address by learn from DHCP

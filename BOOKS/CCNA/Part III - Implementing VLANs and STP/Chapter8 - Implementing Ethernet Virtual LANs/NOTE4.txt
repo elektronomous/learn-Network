@@ -1,0 +1,126 @@
+IMPLEMENTING INTERFACES CONNECTED TO PHONES
+This next topic is strange, at least in the context of access links and trunk links. In the world of IP telephony,
+telephones use Ethernet ports to connect to an Ethernet network so they can use IP to send and receive voice
+traffic sent via IP packets. To make that work, the switch’s Ethernet port acts like an access port, but at the 
+same time, the port acts like a trunk in some ways.
+
+DATA AND VOICE VLAN CONCEPTS
+Before IP telephony, a PC could sit on the same desk as a phone. The phone happened to use UTP cabling, with that 
+phone connected to some voice device (often called a voice switch or a private branch exchange [PBX]). The PC, of
+course, connected using an unshielded twisted-pair (UTP) cable to the usual LAN switch that sat in the wiring closet—
+sometimes in the same wiring closet as the voice switch. Figure Image19.PNG shows the idea.
+
+The term IP telephony refers to the branch of networking in which the telephones use IP packets to send and receive
+voice as represented by the bits in the data portion of the IP packet. The phones connect to the network like most 
+other end-user devices, using either Ethernet or Wi-Fi. These new IP phones did not connect via cable directly to a
+voice switch, instead connecting to the IP network using an Ethernet cable and an Ethernet port built in to the phone. 
+The phones then communicated over the IP network with software that replaced the call setup and other functions of the
+PBX. (The current products from Cisco that perform this IP telephony control function are called Cisco Unified
+Communication Manager.)
+
+The migration from using the already-installed telephone cabling to these new IP phones that needed UTP cables that
+supported Ethernet caused some problems in some offices. In particular:
+    ■ The older non-IP phones used a category of UTP cabling that often did not support 100-
+      Mbps or 1000-Mbps Ethernet.
+    ■ Most offices had a single UTP cable running from the wiring closet to each desk, but now
+      two devices (the PC and the new IP phone) both needed a cable from the desktop to the
+      wiring closet.
+    ■ Installing a new cable to every desk would be expensive, plus you would need more
+      switch ports.
+
+To solve this problem, Cisco embedded small three-port switches into each phone(Image21,22 and 23.PNG). IP telephones have 
+included a small LAN switch, on the underside of the phone, since the earliest IP telephone products. Image20.PNG shows
+the basic cabling, with the wiring closet cable connecting to one physical port on the embedded switch, the PC connecting
+with a short patch cable to the other physical port, and the phone’s internal CPU connecting to an internal switch port.
+Sites that use IP telephony, which includes almost every company today, now have two devices off each access port. In 
+addition, Cisco best practices for IP telephony design tell us to put the phones in one VLAN and the PCs in a different VLAN.
+To make that happen, the switch(embedded switch) port acts a little like an access link (for the PC’s traffic), and a little
+like a trunk (for the phone’s traffic). The configuration defines two VLANs on that port, as follows:
+
+  Data VLAN: Same idea and configuration as the access VLAN on an access port but
+             defined as the VLAN on that link for forwarding the traffic for the device connected to
+             the phone on the desk (typically the user’s PC).
+  Voice VLAN: The VLAN defined on the link for forwarding the phone’s traffic. Traffic in
+              this VLAN is typically tagged with an 802.1Q header.
+
+Image24.PNG illustrates this design with two VLANs on access ports that support IP telephones. If you confused by the word 
+"access ports", the ports or interfaces of the switch(top-most figure) to the these devices connected aren't for trunking. it's just
+there for the connections for the devices. NOTE that the port is configured to be trunk (the frame is inserted a 802.1Q header which is
+tagging with VLAN-ID when the frame is forwarded through this port) or not trunk. so the conclusion of this, the internal switch's port
+(the port that's connect to the switch) of the IP telephony is a work as the access port (when forwarding the PC's FRAME) and trunk(when
+forwarding the PHONE IP PACKET) at the same time.
+
+DATA AND VOICE VLAN CONFIGURATION AND VERIFICATION
+so what's the point to need to configure the switch where the IP TELEPHONY connected ? The switch could differentiate the frame that 
+entered to the switch. The switch would definitely know whether the frame is a VOICE IP PACKET so there's no need to inserted again the
+802.1Q header (tag VLAN-ID) or PC's IP PACKET. The switch knows both frame by creating two VLANs where each of the frames will be forward
+to these VLANs. 
+
+Image25.PNG shows an example configuration. In this case, all four switch ports F0/1–F0/4 begin with default configuration. The 
+configuration adds the new data and voice VLANs. The example then configures all four ports as access ports and defines the access VLAN,
+which is also called the data VLAN when discussing IP telephony. Finally, the configuration includes the switchport voice vlan 11 
+command, which defines the voice VLAN used on the port. The example matches Image24.PNG, using ports F0/1–F0/4.
+
+After this configuration the switch would know that when IP TELEPHONY is forwarding packet on the switch, the switch would directs the
+packet to the VOICE VLAN(VLAN 11) while the PC'S packet would direct to the DATA VLAN(VLAN 10) which these VLAN are reside in the same
+port. 
+
+The following list details the configuration steps for easier review and study:
+  Step 1. Use the "vlan vlan-id" command in global configuration mode to create the data
+          and voice VLANs if they do not already exist on the switch.
+  Step 2. Configure the data VLAN like an access VLAN, as usual:
+          A. Use the "interface type number" command global configuration mode to
+             move into interface configuration mode.
+          B. Use the "switchport access vlan id-number" command in interface configuration mode to define the data VLAN.
+          C. Use the "switchport mode access" command in interface configuration mode
+             to make this port always operate in access mode (that is, to not trunk).
+  Step 3. Use the switchport voice vlan id-number command in interface configuration
+          mode to set the voice VLAN ID.
+
+Verifying the status of a switch port configured like Image25.PNG shows some different output compared to the pure access port and pure
+trunk port configurations seen earlier in this chapter. For example, the "show interfaces switchport" command shows details about the 
+operation of an interface, including many details about access ports. Image26.PNG shows those details for port F0/4 after the 
+configuration in Image25.PNG was added.
+
+Working through the first three highlighted lines in the output, all those details should look familiar for any access port. The 
+switchport mode access configuration command statically configures the administrative mode to be an access port, so the port of course
+operates as an access port. Also, as shown in the third highlighted line, the "switchport access vlan 10" configuration command defined
+the access mode VLAN as highlighted here.
+
+The fourth highlighted line shows the one small new piece of information: the voice VLAN ID, as set with the "switchport voice vlan 11"
+command in this case. This small line of output is the only piece of information in the output that differs from the earlier access port
+examples in this chapter.
+
+These ports act more like access ports than trunk ports. In fact, the show interfaces type number switchport command boldly proclaims,
+“Operational Mode: static access.” As mentioned earlier, the show interfaces trunk command—that is, the command that does not include a
+specific interface in the middle of the command—lists the operational trunks on a switch. With IP telephony ports, the ports do not show
+up in the list of trunks either—providing evidence that these links are not treated as trunks. Image27.PNG shows just such an example.
+
+However, the show interfaces trunk command with the interface listed in the middle of the command, as is also shown in Image27.PNG, does
+list some additional information. Note that in this case, the "show interfaces F0/4 trunk" command lists the status as not-trunking, but
+with VLANs 10 and 11 allowed on the trunk. (Normally, on an access port, only the access VLAN is listed in the “VLANs allowed on the 
+trunk” list in the output of this command.)
+
+the different of the "show interfaces F0/4 trunk" with the "show interfaces trunk" in Image18.PNG is that the port F0/4 (and other ports
+that are configured with the same setting) is it's configured to be ready to receive trunking frame from embedded switch on telephone. 
+while the Image18.PNG trunking the frame that will be forwarded by SW1.
+
+SUMMARY: IP TELEPHONY PORTS ON SWITCHES
+The most important items to remember are as follows:
+  ■ Configure these ports like a normal access port to begin: Configure it as a static access
+    port and assign it an access VLAN.
+  ■ Add one more command to define the voice VLAN (switchport voice vlan vlan-id).
+  ■ Look for the mention of the voice VLAN ID, but no other new facts, in the output of the
+    show interfaces type number switchport command.
+  ■ Look for both the voice and data (access) VLAN IDs in the output of the show interfaces
+    type number trunk command.
+  ■ Do not expect to see the port listed in the list of operational trunks as listed by the show
+    interfaces trunk command
+  
+If you confused by the whole section, try this: The embedded switch with its three port does its job by forwarding two kind of frames.
+first frame is the PC's frame(PC port) and the second is telephone's frame(internal CPU of the phone connect to the internal port of the 
+embedded switch). The third port which connect to outer switch(layer 2 switch) does its job by trunking one of those two frame, making of
+the frame to be inserted 802.1Q header(tagging VLAN-ID). The outer switch configured to use VLAN 10 as access VLAN and VLAN 11 used
+as VOICE VLAN know that the frame with inserted 802.1Q header will be directed to VLAN 11, and the other frame (PC's frame) will be 
+directed to VLAN 10. These VLANs are created for differentiate the frame because both frame (PCs and telephone) are different in term of
+data that will be sent.

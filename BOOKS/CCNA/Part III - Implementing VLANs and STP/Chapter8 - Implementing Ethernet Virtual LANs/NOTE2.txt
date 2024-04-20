@@ -4,3 +4,102 @@ Cisco has supported two different trunking protocols over the years: Inter-Switc
 trunking standard. Today, 802.1Q has become the more popular trunking protocol, with Cisco not even 
 bothering to support ISL in many of its switch models today.
 
+While both ISL and 802.1Q tag each frame with the VLAN ID, the details differ. 802.1Q inserts an extra
+4-byte 802.1Q VLAN header into the original frame’s Ethernet header, as shown at the top of Image6.PNG. 
+As for the fields in the 802.1Q header, only the 12-bit VLAN ID field inside the 802.1Q header matters
+for topics discussed in this book. This 12-bit field supports a theoretical maximum of 2¹² (4096) VLANs,
+but in practice it supports a maximum of 4094. (Both 802.1Q and ISL use 12 bits to tag the VLAN ID, with
+two reserved values [0 and 4095]).
+
+Cisco switches break the range of VLAN IDs (1–4094) into two ranges: the normal range and the extended 
+range. All switches can use normal-range VLANs with values from 1 to 1005. Only some switches can use
+extended-range VLANs with VLAN IDs from 1006 to 4094. The rules for which switches can use extended-range
+VLANs depend on the configuration of the VLAN Trunking Protocol (VTP), which is discussed briefly in the
+section “VLAN Trunking Configuration,” later in this chapter.
+
+802.1Q also defines one special VLAN ID on each trunk as the native VLAN (defaulting to use VLAN 1). By
+definition, 802.1Q simply does not add an 802.1Q header to frames in the native VLAN. When the switch on
+the other side of the trunk receives a frame that does not have an 802.1Q header, the receiving switch
+knows that the frame is part of the native VLAN. Note that because of this behavior, both switches must
+agree on which VLAN is the native VLAN.
+
+The 802.1Q native VLAN provides some interesting functions, mainly to support connections to devices that
+do not understand trunking. For example, a Cisco switch could be cabled to a switch that does not understand
+802.1Q trunking. The Cisco switch could send frames in the native VLAN—meaning that the frame has no trunking
+header—so that the other switch would understand the frame. The native VLAN concept gives switches the 
+capability of at least passing traffic in one VLAN (the native VLAN), which can allow some basic functions,
+like reachability to telnet into a switch.
+
+FORWARDING DATA BETWEEN VLANs
+If you create a campus LAN that contains many VLANs, you typically still need all devices to be able to send 
+data to all other devices. 
+
+THE NEED FOR ROUTING BETWEEN VLANs
+LAN switches that forward data based on Layer 2 logic, as discussed so far in this book, often go by the name Layer
+2 switch. For example, Chapter 5, “Analyzing Ethernet LAN Switching,” discussed how LAN switches receive Ethernet
+frames (a Layer 2 concept), look at the destination Ethernet MAC address (a Layer 2 address), and forward the 
+Ethernet frame out some other interface. All those concepts are defined by Layer 2 protocols, hence the name Layer 
+2 switch.
+
+Layer 2 switches perform their logic per VLAN. For example, in Image7.PNG, the two PCs on the left sit in VLAN 10,
+in subnet 10. The two PCs on the right sit in a different VLAN (20), with a different subnet (20). Note that the
+figure repeats earlier Image2.PNG, but with the switch broken into halves, to emphasize the point that Layer 2 
+switches will not forward data between two VLANs.
+
+As shown in the Image7.PNG, when configured with some ports in VLAN 10 and others in VLAN 20, the switch acts like 
+two separate switches in which it will forward traffic. In fact, one goal of VLANs is to separate traffic in one
+VLAN from another, preventing frames in one VLAN from leaking over to other VLANs. For example, when Dino (in VLAN
+10) sends any Ethernet frame, if SW1 is a Layer 2 switch, that switch will not forward the frame to the PCs on the
+right in VLAN 20.
+
+ROUTING PACKETS BETWEEN VLANs WITH ROUTER
+When including VLANs in a campus LAN design, the devices in a VLAN need to be in the same subnet. Following the same
+design logic, devices in different VLANs need to be in different subnets.
+
+To forward packets between VLANs, the network must use a device that acts as a router. You can use an actual router,
+as well as some other switches that can perform some functions like a router. These switches that also perform Layer
+3 routing functions go by the name multilayer switch or Layer 3 switch. This section first discusses how to forward
+data between VLANs when using Layer 2 switches and ends with a brief discussion of how to use Layer 3 switches.
+
+For example, Image8.PNG shows a router that can route packets between subnets 10 and 20. The figure shows the same 
+Layer 2 switch as shown in Image7.PNG, with the same perspective of the switch being split into parts with two different
+VLANs, and with the same PCs in the same VLANs and subnets. Now Router R1 has one LAN physical interface connected to the
+switch and assigned to VLAN 10, and a second physical interface connected to the switch and assigned to VLAN 20. With an
+interface connected to each subnet, the Layer 2 switch can keep doing its job—forwarding frames inside a VLAN, while the
+router can do its job—routing IP packets between the subnets.
+
+The figure shows an IP packet being routed from Fred, which sits in one VLAN/subnet, to Betty, which sits in the other.
+The Layer 2 switch forwards two different Layer 2 Ethernet frames: one in VLAN 10, from Fred to R1’s F0/0 interface, and
+the other in VLAN 20, from R1’s F0/1 interface to Betty. From a Layer 3 perspective, Fred sends the IP packet to its default
+router (R1), and R1 routes the packet out another interface (F0/1) into another subnet where Betty resides.
+
+The design in Image8.PNG works, but there are several different solutions for routing packets between VLANs. This chapter 
+shows the option of using a separate physical router, with a separate link per VLAN, because it can be the easiest of the
+options to understand and visualize.
+
+VLAN and VLAN TRUNKING CONFIGURATION AND VERIFICATION
+This chapter separates the VLAN configuration details into two major sections. The first section looks at how to configure 
+static access interfaces: switch interfaces configured to be in one VLAN only, therefore not using VLAN trunking. The second
+part shows how to configure interfaces that do use VLAN trunking.
+
+CREATING VLANs and ASSIGNING ACCESS VLANs to AN INTERFACE
+This section shows how to create a VLAN, give the VLAN a name, and assign interfaces to a VLAN. To focus on these basic details,
+this section shows examples using a single switch, so VLAN trunking is not needed.
+
+the switch must have nontrunking interfaces (called access interfaces, or static access interfaces) assigned to the VLAN, 
+and/or trunks that support the VLAN. The configuration steps for access interfaces are as follows:
+    Step 1. To configure a new VLAN, follow these steps:
+            A. From configuration mode, use the "vlan vlan-id" command in global configuration mode to create the VLAN and to
+               move the user into VLAN configuration mode.
+            B. (Optional) Use the "name name" command in VLAN configuration mode to list a name for the VLAN. If not configured,
+               the VLAN name is VLANZZZZ, where ZZZZ is the four-digit decimal VLAN ID.
+    Step 2. For each access interface, follow these steps:
+            A. Use the "interface type number" command in global configuration mode to
+               move into interface configuration mode for each desired interface.
+            B. Use the "switchport access vlan id-number" command in interface configuration mode to specify the VLAN number 
+               associated with that interface.
+            C. (Optional) Use the "switchport mode access" command in interface configuration mode to make this port always 
+               operate in access mode (that is, to not trunk).
+
+NOTE The term default VLAN (as shown in the exam topics) refers to the default setting on the "switchport access vlan vlan-id"
+command, and that default is VLAN ID 1. In other words, by default, each port is assigned to access VLAN 1
